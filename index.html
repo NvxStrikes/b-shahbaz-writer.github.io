@@ -312,13 +312,13 @@
       Bisma
       <span>Shahbaz</span>
     </h1>
-    <div class="hero-tagline">Writing the stories I couldn't find</div>
+    <div class="hero-tagline" id="heroTagline">Writing the stories I couldn't find</div>
     <div class="hero-genres">
       <span class="genre-tag">Gothic Romance</span>
       <span class="genre-tag">Literary Fiction</span>
       <span class="genre-tag">Cozy Fantasy</span>
     </div>
-    <blockquote class="hero-quote">
+    <blockquote class="hero-quote" id="heroQuote">
       "Can we normalise Pakistani writers writing in English not having to explain themselves? The story is enough. The voice is enough."
     </blockquote>
     <div class="hero-actions">
@@ -402,7 +402,7 @@
     </div>
     <a href="books.html" class="btn btn-ghost fade-up">View All →</a>
   </div>
-  <div class="books-row">
+  <div class="books-row" id="homeBooksRow">
     <div class="book-card card fade-up">
       <div class="book-cover">
         <span class="book-status status-wip">WIP</span>
@@ -451,8 +451,8 @@
 <!-- ── QUOTE ── -->
 <section class="quote-section fade-up">
   <span class="big-quote-mark">"</span>
-  <p class="big-quote">Oh me? I'm just waiting for beta readers. Carnival. Letter kings. Ma'aloe refrains. Prophecy. Obsession. Sign up link in bio.</p>
-  <div class="quote-attr">— Bisma Shahbaz, @b.shahbaz_writer</div>
+  <p class="big-quote" id="bigQuote">Oh me? I'm just waiting for beta readers. Carnival. Letter kings. Ma'aloe refrains. Prophecy. Obsession. Sign up link in bio.</p>
+  <div class="quote-attr" id="quoteAttr">— Bisma Shahbaz, @b.shahbaz_writer</div>
 </section>
 
 <!-- ── LATEST ARTICLES ── -->
@@ -464,7 +464,7 @@
     </div>
     <a href="articles.html" class="btn btn-ghost fade-up">All Articles →</a>
   </div>
-  <div class="article-preview">
+  <div class="article-preview" id="homeArticlesRow">
     <div class="article-card card fade-up">
       <div class="article-num">01</div>
       <div class="article-tag">Substack Essay</div>
@@ -510,14 +510,8 @@
     </div>
   </div>
 </footer>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
 <script src="main.js"></script>
-  <script>
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
-      if (!user) window.netlifyIdentity.on("login", () => document.location.href = "/admin/");
-    });
-  }
-</script>
+<script src="cms-loader.js"></script>
 </body>
 </html>
