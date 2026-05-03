@@ -3,7 +3,7 @@ title: NovaStrikes | Bisma's Brother
 status: wip
 genre: fantasy
 cover: /images/uploads/nvx-logo-1-.png
-emoji: 📖
+emoji: 🤯
 description: Hi I'm Hamayl AKA NovaStrikes/NvxStrikes My Brand. Hehe Support my SIster
 tags:
   - novastrikes
