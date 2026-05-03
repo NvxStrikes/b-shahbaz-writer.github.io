@@ -1,0 +1,129 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+publish_mode: editorial_workflow
+
+collections:
+
+  # ── BOOKS ──────────────────────────────────────────
+  - name: "books"
+    label: "📚 Books"
+    folder: "content/books"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Book Title", name: "title", widget: "string" }
+      - label: "Status"
+        name: "status"
+        widget: "select"
+        options:
+          - { label: "Work in Progress (WIP)", value: "wip" }
+          - { label: "Published", value: "published" }
+          - { label: "Coming Soon", value: "upcoming" }
+          - { label: "Beta Readers Open", value: "beta" }
+      - label: "Genre"
+        name: "genre"
+        widget: "select"
+        options:
+          - { label: "Gothic Romance", value: "gothic" }
+          - { label: "Literary Fiction", value: "literary" }
+          - { label: "Cozy Fantasy", value: "fantasy" }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false, hint: "Upload your book cover here" }
+      - { label: "Cover Emoji (if no image)", name: "emoji", widget: "string", required: false, default: "📖" }
+      - { label: "Short Description", name: "description", widget: "text", hint: "1-2 sentences shown on the books page" }
+      - { label: "Full Description / Blurb", name: "body", widget: "markdown", required: false }
+      - label: "Tags"
+        name: "tags"
+        widget: "list"
+        required: false
+        hint: "e.g. Dark, Slow Burn, Pakistani MC"
+      - { label: "Beta Reading Open?", name: "beta_open", widget: "boolean", default: false }
+      - { label: "Order (lower = shown first)", name: "order", widget: "number", default: 1 }
+
+  # ── ARTICLES ───────────────────────────────────────
+  - name: "articles"
+    label: "✍️ Articles"
+    folder: "content/articles"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "Substack Essay", value: "essay" }
+          - { label: "On Writing", value: "writing" }
+          - { label: "ARC Review", value: "review" }
+          - { label: "Series Review", value: "series-review" }
+          - { label: "Reflection", value: "reflection" }
+          - { label: "Identity & Voice", value: "identity" }
+          - { label: "Book Recommendations", value: "recs" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Excerpt", name: "excerpt", widget: "text", hint: "Short preview shown on articles list" }
+      - { label: "External Link (Substack URL)", name: "external_url", widget: "string", required: false, hint: "If article lives on Substack, paste the link here" }
+      - { label: "Featured?", name: "featured", widget: "boolean", default: false, hint: "Show this as the featured article at top" }
+      - { label: "Full Article Body", name: "body", widget: "markdown", required: false, hint: "Only if article lives on this site (not Substack)" }
+
+  # ── HOMEPAGE SETTINGS ──────────────────────────────
+  - name: "settings"
+    label: "⚙️ Site Settings"
+    files:
+
+      - label: "🏠 Homepage"
+        name: "homepage"
+        file: "content/settings/homepage.json"
+        fields:
+          - { label: "Hero Tagline", name: "hero_tagline", widget: "string", hint: "Big line under your name e.g. 'Writing the stories I couldn't find'" }
+          - { label: "Hero Quote", name: "hero_quote", widget: "text", hint: "Italic quote shown in hero section" }
+          - { label: "Intro Paragraph 1", name: "intro_p1", widget: "text" }
+          - { label: "Intro Paragraph 2", name: "intro_p2", widget: "text" }
+          - { label: "Big Site Quote", name: "big_quote", widget: "text", hint: "Large quote shown between books and articles sections" }
+          - { label: "Quote Attribution", name: "quote_attr", widget: "string" }
+
+      - label: "👤 About Page"
+        name: "about"
+        file: "content/settings/about.json"
+        fields:
+          - { label: "Author Photo", name: "photo", widget: "image", required: false }
+          - { label: "Origin Story (paragraph 1)", name: "origin_p1", widget: "text" }
+          - { label: "Origin Story (paragraph 2)", name: "origin_p2", widget: "text" }
+          - { label: "Highlight Quote", name: "highlight_quote", widget: "string" }
+          - { label: "Writing Life (paragraph 1)", name: "writing_p1", widget: "text" }
+          - { label: "Writing Life (paragraph 2)", name: "writing_p2", widget: "text" }
+          - label: "Fun Facts"
+            name: "facts"
+            widget: "list"
+            hint: "Each line is one fun fact shown with a ✦"
+            field: { label: "Fact", name: "fact", widget: "string" }
+
+      - label: "🔗 Social Links & Shop"
+        name: "links"
+        file: "content/settings/links.json"
+        fields:
+          - { label: "Instagram URL", name: "instagram", widget: "string" }
+          - { label: "Instagram Handle", name: "instagram_handle", widget: "string", default: "@b.shahbaz_writer" }
+          - { label: "Linktree URL", name: "linktree", widget: "string" }
+          - { label: "Substack URL", name: "substack", widget: "string" }
+          - label: "Extra Links"
+            name: "extra_links"
+            widget: "list"
+            required: false
+            hint: "Any additional links to show on Shop page"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "desc", widget: "string" }
+              - { label: "URL", name: "url", widget: "string" }
+              - { label: "Icon Emoji", name: "icon", widget: "string", default: "🔗" }
+
+      - label: "📧 Newsletter"
+        name: "newsletter"
+        file: "content/settings/newsletter.json"
+        fields:
+          - { label: "Mailchimp Embed URL", name: "mailchimp_url", widget: "string", hint: "Paste your Mailchimp form action URL here", required: false }
+          - { label: "Newsletter Heading", name: "heading", widget: "string", default: "Join the Newsletter" }
+          - { label: "Newsletter Subtext", name: "subtext", widget: "string", default: "Essays on writing, literature, and what it means to be human." }
