@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop & Links — Bisma Shahbaz</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.shop-page { padding: 60px 56px 120px; max-width: 900px; margin: 0 auto; }
+
+.links-section { margin-bottom: 72px; }
+.links-section-title {
+  font-family: var(--font-display); font-size: 1.6rem; font-style: italic;
+  color: var(--parchment); margin-bottom: 6px; margin-top: 8px;
+}
+.links-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+
+.link-card {
+  display: flex; align-items: center; gap: 20px; padding: 20px 24px;
+  background: rgba(255,255,255,0.025); border: 1px solid rgba(200,169,110,0.1);
+  text-decoration: none; transition: all 0.35s; position: relative; overflow: hidden;
+}
+.link-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--gold); transform: scaleY(0); transform-origin: bottom;
+  transition: transform 0.3s;
+}
+.link-card:hover { border-color: rgba(200,169,110,0.3); background: rgba(255,255,255,0.04); transform: translateX(4px); }
+.link-card:hover::before { transform: scaleY(1); }
+
+.lc-icon { font-size: 1.6rem; flex-shrink: 0; width: 44px; text-align: center; }
+.lc-body { flex: 1; }
+.lc-title { font-family: var(--font-serif); font-size: 1rem; font-style: italic; color: var(--parchment); margin-bottom: 3px; }
+.lc-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+.lc-arrow { color: var(--gold-dim); font-size: 1.1rem; flex-shrink: 0; transition: all 0.3s; }
+.link-card:hover .lc-arrow { color: var(--gold); transform: translateX(4px); }
+.lc-badge {
+  font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase;
+  background: var(--gold); color: var(--ink); padding: 3px 8px; border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* Reading challenge / Manhwa */
+.manhwa-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 20px; }
+.manhwa-card {
+  aspect-ratio: 2/3; background: var(--ink-soft);
+  border: 1px solid rgba(200,169,110,0.08);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 20px; text-align: center; position: relative; overflow: hidden;
+  transition: all 0.3s;
+}
+.manhwa-card:hover { border-color: rgba(200,169,110,0.2); transform: translateY(-4px); }
+.mc-icon { font-size: 2.4rem; margin-bottom: 12px; opacity: 0.6; }
+.mc-title { font-family: var(--font-serif); font-size: 0.88rem; font-style: italic; color: var(--parchment); }
+.mc-label { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-top: 6px; }
+
+/* Support box */
+.support-box {
+  padding: 48px; background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(200,169,110,0.1); text-align: center;
+  position: relative; overflow: hidden;
+}
+.support-box::before {
+  content: '♡'; position: absolute; font-size: 10rem;
+  color: rgba(107,45,45,0.06); top: 50%; left: 50%;
+  transform: translate(-50%,-50%); font-family: var(--font-display);
+  pointer-events: none;
+}
+.support-box h2 { font-family: var(--font-display); font-size: 2rem; font-style: italic; color: var(--parchment); margin-bottom: 14px; }
+.support-box p { font-size: 0.95rem; color: var(--text-mid); line-height: 1.8; max-width: 480px; margin: 0 auto 28px; }
+
+@media (max-width: 768px) {
+  .shop-page { padding: 40px 24px 80px; }
+  .manhwa-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo"><span>B.</span>Shahbaz</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+    <li><a href="books.html">Books</a></li><li><a href="articles.html">Articles</a></li>
+    <li><a href="shop.html" class="active">Shop & Links</a></li><li><a href="contact.html">Contact</a></li>
+  </ul>
+  <button class="nav-menu-toggle" id="navToggle"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="mobileNav">
+  <button class="nav-mobile-close" id="mobileClose">✕</button>
+  <a href="index.html">Home</a><a href="about.html">About</a><a href="books.html">Books</a>
+  <a href="articles.html">Articles</a><a href="shop.html">Shop & Links</a><a href="contact.html">Contact</a>
+</div>
+
+<div class="page-wrap">
+  <div class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="page-hero-content">
+      <div class="section-eyebrow">Everything in One Place</div>
+      <h1>Shop &amp;<br><em style="color:var(--gold)">Links</em></h1>
+      <p>All my social links, Substack, reading lists, ARCs, and a few ways to support the work.</p>
+    </div>
+  </div>
+
+  <div class="shop-page">
+
+    <!-- Social Links -->
+    <div class="links-section fade-up">
+      <div class="section-eyebrow">Find Me</div>
+      <div class="links-section-title">Social Links</div>
+      <div class="links-grid">
+        <a href="https://instagram.com/b.shahbaz_writer" target="_blank" class="link-card">
+          <div class="lc-icon">📸</div>
+          <div class="lc-body">
+            <div class="lc-title">Instagram</div>
+            <div class="lc-desc">@b.shahbaz_writer — Daily writing updates, ARC reviews, WIP snippets & bookish content</div>
+          </div>
+          <div class="lc-arrow">↗</div>
+        </a>
+        <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="link-card">
+          <div class="lc-icon">🌿</div>
+          <div class="lc-body">
+            <div class="lc-title">Linktree</div>
+            <div class="lc-desc">All my links in one place — Substack, ARCs, beta reading, and more</div>
+          </div>
+          <span class="lc-badge">Hub</span>
+          <div class="lc-arrow">↗</div>
+        </a>
+        <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="link-card">
+          <div class="lc-icon">✍️</div>
+          <div class="lc-body">
+            <div class="lc-title">Substack</div>
+            <div class="lc-desc">Essays on writing, literature, and what it means to be human. Subscribe for new issues.</div>
+          </div>
+          <div class="lc-arrow">↗</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ARC & Beta -->
+    <div class="links-section fade-up">
+      <div class="section-eyebrow">For Readers</div>
+      <div class="links-section-title">ARCs & Beta Reading</div>
+      <div class="links-grid">
+        <a href="contact.html" class="link-card">
+          <div class="lc-icon">📖</div>
+          <div class="lc-body">
+            <div class="lc-title">Beta Reader Sign-Up</div>
+            <div class="lc-desc">Interested in beta reading Carnival, Letter Kings, Prophecy, Obsession, or Ma'aloe Refrains? Sign up here.</div>
+          </div>
+          <span class="lc-badge">Open</span>
+          <div class="lc-arrow">→</div>
+        </a>
+        <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="link-card">
+          <div class="lc-icon">📚</div>
+          <div class="lc-body">
+            <div class="lc-title">ARC Reviews</div>
+            <div class="lc-desc">I review ARCs across gothic romance, literary fiction, and cozy fantasy. Check my Instagram highlights for recent reviews.</div>
+          </div>
+          <div class="lc-arrow">↗</div>
+        </a>
+        <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="link-card">
+          <div class="lc-icon">📋</div>
+          <div class="lc-body">
+            <div class="lc-title">Series Reviews</div>
+            <div class="lc-desc">Full series breakdowns — from Bookmarker Love to Moonborn and everything between.</div>
+          </div>
+          <div class="lc-arrow">↗</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Reading / Manhwa -->
+    <div class="links-section fade-up">
+      <div class="section-eyebrow">Currently Reading</div>
+      <div class="links-section-title">~Manhwa~ & More</div>
+      <div class="manhwa-grid">
+        <div class="manhwa-card">
+          <div class="mc-icon">🌸</div>
+          <div class="mc-title">Manhwa Recs</div>
+          <div class="mc-label">See Instagram highlights</div>
+        </div>
+        <div class="manhwa-card">
+          <div class="mc-icon">📕</div>
+          <div class="mc-title">Current Read</div>
+          <div class="mc-label">Updated regularly</div>
+        </div>
+        <div class="manhwa-card">
+          <div class="mc-icon">⭐</div>
+          <div class="mc-title">IITMs</div>
+          <div class="mc-label">If I told myself</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Support -->
+    <div class="support-box fade-up">
+      <h2>Support the Writing</h2>
+      <p>If you enjoy my essays, reviews, or just want to help a Pakistani author keep writing the stories she couldn't find — every bit of support means the world.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="btn btn-gold">Subscribe on Substack</a>
+        <a href="contact.html" class="btn btn-outline">Beta Read My Work</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo"><span>B.</span>Shahbaz</a>
+  <div class="footer-links">
+    <a href="about.html">About</a><a href="books.html">Books</a>
+    <a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="contact.html">Contact</a>
+  </div>
+  <div>
+    <div class="footer-copy">© 2024 Bisma Shahbaz. All rights reserved.</div>
+    <div class="footer-socials">
+      <a href="https://instagram.com/b.shahbaz_writer" target="_blank">ig</a>
+      <a href="https://linktr.ee/BismaShahbazWriter" target="_blank">lt</a>
+    </div>
+  </div>
+</footer>
+<script src="main.js"></script>
+</body>
+</html>

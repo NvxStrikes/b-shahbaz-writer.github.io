@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Books — Bisma Shahbaz</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.books-page { padding: 60px 56px 120px; }
+
+/* Filter tabs */
+.filter-tabs { display: flex; gap: 4px; margin-bottom: 52px; flex-wrap: wrap; }
+.filter-tab {
+  font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 9px 20px; background: transparent;
+  border: 1px solid rgba(200,169,110,0.12); color: var(--text-dim);
+  cursor: pointer; font-family: var(--font-body); transition: all 0.3s;
+}
+.filter-tab:hover { border-color: rgba(200,169,110,0.3); color: var(--text-mid); }
+.filter-tab.active { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+/* Books grid */
+.books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 36px; }
+
+.book-item { cursor: pointer; }
+.book-cover-wrap {
+  position: relative; aspect-ratio: 2/3; overflow: hidden;
+  background: var(--ink-soft); border: 1px solid rgba(200,169,110,0.1);
+  transition: all 0.4s; margin-bottom: 16px;
+}
+.book-item:hover .book-cover-wrap {
+  border-color: rgba(200,169,110,0.3);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  transform: translateY(-6px);
+}
+.book-cover-art {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px; text-align: center;
+  transition: all 0.4s;
+}
+.book-item:hover .book-cover-art { background: rgba(61,43,31,0.2); }
+.bca-ornament { font-size: 3.5rem; margin-bottom: 20px; opacity: 0.6; transition: all 0.4s; }
+.book-item:hover .bca-ornament { opacity: 0.9; transform: scale(1.1); }
+.bca-title {
+  font-family: var(--font-display); font-size: 1.3rem; font-style: italic;
+  color: var(--parchment); line-height: 1.3; margin-bottom: 12px;
+}
+.bca-author { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-dim); }
+.book-badge {
+  position: absolute; top: 14px; right: 14px;
+  font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 5px 10px; font-family: var(--font-body);
+}
+.badge-wip { background: rgba(107,45,45,0.75); color: var(--parchment); border: 1px solid rgba(200,169,110,0.12); }
+.badge-published { background: var(--gold); color: var(--ink); }
+.badge-upcoming { background: rgba(61,43,31,0.85); color: var(--gold-light); border: 1px solid rgba(200,169,110,0.15); }
+.badge-beta { background: rgba(40,60,40,0.85); color: #86efac; border: 1px solid rgba(134,239,172,0.2); }
+
+.book-meta { }
+.bm-title { font-family: var(--font-serif); font-size: 1.08rem; font-style: italic; color: var(--parchment); margin-bottom: 5px; }
+.bm-genre { font-size: 0.65rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+.bm-desc { font-size: 0.88rem; line-height: 1.7; color: var(--text-mid); margin-bottom: 14px; display: none; }
+.bm-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.bm-tag {
+  font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+  border: 1px solid rgba(200,169,110,0.12); color: var(--text-dim);
+  padding: 3px 8px;
+}
+
+/* Beta readers CTA */
+.beta-cta {
+  margin-top: 80px; padding: 56px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(200,169,110,0.1);
+  text-align: center; position: relative; overflow: hidden;
+}
+.beta-cta::before {
+  content: '✦';
+  position: absolute; font-size: 12rem; color: rgba(200,169,110,0.03);
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  font-family: var(--font-display); pointer-events: none;
+}
+.beta-cta h2 {
+  font-family: var(--font-display); font-size: 2.4rem; font-style: italic;
+  color: var(--parchment); margin-bottom: 16px;
+}
+.beta-cta p { font-size: 1rem; color: var(--text-mid); line-height: 1.8; max-width: 520px; margin: 0 auto 32px; }
+
+@media (max-width: 768px) {
+  .books-page { padding: 40px 24px 80px; }
+  .books-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+}
+@media (max-width: 480px) {
+  .books-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo"><span>B.</span>Shahbaz</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+    <li><a href="books.html" class="active">Books</a></li><li><a href="articles.html">Articles</a></li>
+    <li><a href="shop.html">Shop & Links</a></li><li><a href="contact.html">Contact</a></li>
+  </ul>
+  <button class="nav-menu-toggle" id="navToggle"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="mobileNav">
+  <button class="nav-mobile-close" id="mobileClose">✕</button>
+  <a href="index.html">Home</a><a href="about.html">About</a><a href="books.html">Books</a>
+  <a href="articles.html">Articles</a><a href="shop.html">Shop & Links</a><a href="contact.html">Contact</a>
+</div>
+
+<div class="page-wrap">
+  <div class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="page-hero-content">
+      <div class="section-eyebrow">The Shelf</div>
+      <h1>My <em style="color:var(--gold)">Books</em></h1>
+      <p>Published works, works in progress, and everything in between. Each one a world that demanded to exist.</p>
+    </div>
+  </div>
+
+  <div class="books-page">
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterBooks('all', this)">All</button>
+      <button class="filter-tab" onclick="filterBooks('wip', this)">WIPs</button>
+      <button class="filter-tab" onclick="filterBooks('published', this)">Published</button>
+      <button class="filter-tab" onclick="filterBooks('gothic', this)">Gothic Romance</button>
+      <button class="filter-tab" onclick="filterBooks('fantasy', this)">Cozy Fantasy</button>
+      <button class="filter-tab" onclick="filterBooks('literary', this)">Literary Fiction</button>
+    </div>
+
+    <div class="books-grid" id="booksGrid">
+
+      <div class="book-item fade-up" data-tags="wip gothic">
+        <div class="book-cover-wrap" style="background:linear-gradient(160deg,#1c1210,#0e0b08);">
+          <span class="book-badge badge-beta">Beta Readers Open</span>
+          <div class="book-cover-art">
+            <div class="bca-ornament">🕯️</div>
+            <div class="bca-title">The Carnival of Lost Kings</div>
+            <div class="bca-author">Bisma Shahbaz</div>
+          </div>
+        </div>
+        <div class="book-meta">
+          <div class="bm-title">The Carnival of Lost Kings</div>
+          <div class="bm-genre">Gothic Romance · WIP</div>
+          <div class="bm-tags">
+            <span class="bm-tag">Gothic</span><span class="bm-tag">Dark</span><span class="bm-tag">Beta Open</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="book-item fade-up fade-up-delay-1" data-tags="wip gothic">
+        <div class="book-cover-wrap" style="background:linear-gradient(160deg,#1a1015,#0e0b08);">
+          <span class="book-badge badge-wip">WIP</span>
+          <div class="book-cover-art">
+            <div class="bca-ornament">👑</div>
+            <div class="bca-title">Letter Kings</div>
+            <div class="bca-author">Bisma Shahbaz</div>
+          </div>
+        </div>
+        <div class="book-meta">
+          <div class="bm-title">Letter Kings</div>
+          <div class="bm-genre">Gothic Romance · WIP</div>
+          <div class="bm-tags"><span class="bm-tag">Gothic</span><span class="bm-tag">WIP</span></div>
+        </div>
+      </div>
+
+      <div class="book-item fade-up fade-up-delay-2" data-tags="wip fantasy">
+        <div class="book-cover-wrap" style="background:linear-gradient(160deg,#101820,#0e0b08);">
+          <span class="book-badge badge-wip">WIP</span>
+          <div class="book-cover-art">
+            <div class="bca-ornament">🌙</div>
+            <div class="bca-title">Ma'aloe Refrains</div>
+            <div class="bca-author">Bisma Shahbaz</div>
+          </div>
+        </div>
+        <div class="book-meta">
+          <div class="bm-title">Ma'aloe Refrains</div>
+          <div class="bm-genre">Cozy Fantasy · WIP</div>
+          <div class="bm-tags"><span class="bm-tag">Fantasy</span><span class="bm-tag">Cozy</span></div>
+        </div>
+      </div>
+
+      <div class="book-item fade-up fade-up-delay-3" data-tags="wip gothic">
+        <div class="book-cover-wrap" style="background:linear-gradient(160deg,#1a1008,#0e0b08);">
+          <span class="book-badge badge-beta">Beta Readers Open</span>
+          <div class="book-cover-art">
+            <div class="bca-ornament">🔮</div>
+            <div class="bca-title">Prophecy</div>
+            <div class="bca-author">Bisma Shahbaz</div>
+          </div>
+        </div>
+        <div class="book-meta">
+          <div class="bm-title">Prophecy</div>
+          <div class="bm-genre">Gothic Romance · WIP</div>
+          <div class="bm-tags"><span class="bm-tag">Gothic</span><span class="bm-tag">Beta Open</span></div>
+        </div>
+      </div>
+
+      <div class="book-item fade-up" data-tags="wip literary">
+        <div class="book-cover-wrap" style="background:linear-gradient(160deg,#181010,#0e0b08);">
+          <span class="book-badge badge-beta">Beta Readers Open</span>
+          <div class="book-cover-art">
+            <div class="bca-ornament">🖤</div>
+            <div class="bca-title">Obsession</div>
+            <div class="bca-author">Bisma Shahbaz</div>
+          </div>
+        </div>
+        <div class="book-meta">
+          <div class="bm-title">Obsession</div>
+          <div class="bm-genre">Literary Fiction · WIP</div>
+          <div class="bm-tags"><span class="bm-tag">Literary</span><span class="bm-tag">Beta Open</span></div>
+        </div>
+      </div>
+
+      <div class="book-item fade-up fade-up-delay-1" data-tags="wip fantasy">
+        <div class="book-cover-wrap" style="background:linear-gradient(160deg,#101a12,#0e0b08);">
+          <span class="book-badge badge-upcoming">Coming Soon</span>
+          <div class="book-cover-art">
+            <div class="bca-ornament">🍵</div>
+            <div class="bca-title">Obsidian & Ordinary Things</div>
+            <div class="bca-author">Bisma Shahbaz</div>
+          </div>
+        </div>
+        <div class="book-meta">
+          <div class="bm-title">Obsidian & Ordinary Things</div>
+          <div class="bm-genre">Cozy Fantasy · Early Draft</div>
+          <div class="bm-tags"><span class="bm-tag">Fantasy</span><span class="bm-tag">Cozy</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="beta-cta fade-up">
+      <h2>Looking for beta readers</h2>
+      <p>If you're a reader who loves gothic romance, literary fiction, or cozy fantasy — and you're not afraid of dark themes, slow burns, and Pakistani voices in English literature — I'd love to hear from you.</p>
+      <a href="contact.html" class="btn btn-gold">Sign Up to Beta Read</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo"><span>B.</span>Shahbaz</a>
+  <div class="footer-links">
+    <a href="about.html">About</a><a href="books.html">Books</a>
+    <a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="contact.html">Contact</a>
+  </div>
+  <div>
+    <div class="footer-copy">© 2024 Bisma Shahbaz. All rights reserved.</div>
+    <div class="footer-socials">
+      <a href="https://instagram.com/b.shahbaz_writer" target="_blank">ig</a>
+      <a href="https://linktr.ee/BismaShahbazWriter" target="_blank">lt</a>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+function filterBooks(tag, btn) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.book-item').forEach(item => {
+    if (tag === 'all') { item.style.display = ''; return; }
+    const tags = item.dataset.tags || '';
+    item.style.display = tags.includes(tag) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

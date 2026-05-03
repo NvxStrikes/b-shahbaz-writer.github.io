@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Bisma Shahbaz</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.about-grid { padding: 80px 56px 120px; display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start; }
+.about-sidebar { position: sticky; top: 100px; }
+.author-frame {
+  width: 100%; aspect-ratio: 3/4; background: var(--ink-soft);
+  border: 1px solid rgba(200,169,110,0.12); position: relative; overflow: hidden; margin-bottom: 28px;
+}
+.author-frame-inner {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(61,43,31,0.5) 0%, rgba(14,11,8,0.92) 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.author-frame-letter { font-family: var(--font-display); font-size: 12rem; font-style: italic; color: rgba(200,169,110,0.1); }
+.author-frame-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 20px; background: linear-gradient(to top, rgba(14,11,8,0.9), transparent);
+  font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-dim); text-align: center;
+}
+.sidebar-links { display: flex; flex-direction: column; gap: 10px; }
+.sidebar-link {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(200,169,110,0.08); text-decoration: none;
+  color: var(--text-mid); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+  transition: all 0.3s;
+}
+.sidebar-link:hover { border-color: rgba(200,169,110,0.25); color: var(--gold); }
+.sidebar-link span { color: var(--gold); font-size: 0.65rem; }
+
+.about-content { }
+.about-section { margin-bottom: 64px; }
+.about-section:last-child { margin-bottom: 0; }
+.about-section h2 {
+  font-family: var(--font-display); font-size: 2.2rem; font-style: italic;
+  color: var(--parchment); margin-bottom: 20px; margin-top: 8px;
+}
+.about-section p { font-size: 1.05rem; line-height: 1.9; color: var(--text-mid); margin-bottom: 18px; font-weight: 300; }
+.about-section p:last-child { margin-bottom: 0; }
+
+.highlight-text {
+  font-family: var(--font-serif); font-size: 1.3rem; font-style: italic;
+  color: var(--parchment); line-height: 1.6;
+  border-left: 2px solid var(--gold-dim); padding-left: 22px;
+  margin: 28px 0;
+}
+
+/* Reading recs */
+.recs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+.rec-item {
+  padding: 14px 16px; background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(200,169,110,0.07);
+}
+.rec-title { font-family: var(--font-serif); font-size: 0.92rem; font-style: italic; color: var(--parchment); }
+.rec-author { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 3px; }
+
+/* Fun facts */
+.facts-list { list-style: none; margin-top: 20px; }
+.facts-list li {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 0; border-bottom: 1px solid rgba(200,169,110,0.06);
+  font-size: 0.98rem; line-height: 1.7; color: var(--text-mid);
+}
+.facts-list li:last-child { border-bottom: none; }
+.fact-icon { color: var(--gold); font-size: 0.9rem; margin-top: 3px; flex-shrink: 0; }
+
+@media (max-width: 900px) {
+  .about-grid { grid-template-columns: 1fr; padding: 60px 24px 80px; gap: 40px; }
+  .about-sidebar { position: static; }
+  .author-frame { max-width: 300px; }
+  .recs-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo"><span>B.</span>Shahbaz</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="books.html">Books</a></li>
+    <li><a href="articles.html">Articles</a></li>
+    <li><a href="shop.html">Shop & Links</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <button class="nav-menu-toggle" id="navToggle"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="mobileNav">
+  <button class="nav-mobile-close" id="mobileClose">✕</button>
+  <a href="index.html">Home</a><a href="about.html">About</a><a href="books.html">Books</a>
+  <a href="articles.html">Articles</a><a href="shop.html">Shop & Links</a><a href="contact.html">Contact</a>
+</div>
+
+<div class="page-wrap">
+  <div class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="page-hero-content">
+      <div class="section-eyebrow">The Author</div>
+      <h1>About<br><em style="color:var(--gold)">Bisma.</em></h1>
+      <p>Aspiring author from Pakistan writing gothic romance, literary fiction & cozy fantasy. She/her. Perpetually caffeinated. Several WIPs, zero chill.</p>
+    </div>
+  </div>
+
+  <div class="about-grid">
+    <div class="about-sidebar fade-up">
+      <div class="author-frame">
+        <div class="author-frame-inner"><div class="author-frame-letter">B</div></div>
+        <div class="author-frame-caption">Bisma Shahbaz · Author</div>
+      </div>
+      <div class="sidebar-links">
+        <a href="books.html" class="sidebar-link">My Books <span>→</span></a>
+        <a href="articles.html" class="sidebar-link">Substack Essays <span>→</span></a>
+        <a href="https://instagram.com/b.shahbaz_writer" target="_blank" class="sidebar-link">Instagram <span>↗</span></a>
+        <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="sidebar-link">All Links <span>↗</span></a>
+        <a href="contact.html" class="sidebar-link">Beta Reading Enquiry <span>→</span></a>
+      </div>
+    </div>
+
+    <div class="about-content">
+      <div class="about-section fade-up">
+        <div class="section-eyebrow">The Origin Story</div>
+        <h2>Writing the stories I couldn't find</h2>
+        <p>Hi, I'm Bisma. I'm a Pakistani author in my 20s writing gothic romance, literary fiction, and cozy fantasy — three genres that feel wildly different but all share the same DNA: characters who feel too much, worlds that breathe, and stories that reach for something true.</p>
+        <p>I started writing because the stories I desperately wanted to read didn't exist. Pakistani protagonists in English gothic fiction. South Asian voices in literary spaces that weren't defined by diaspora trauma. Cozy magic that felt genuinely warm, not performatively cute. So I started writing them myself.</p>
+        <div class="highlight-text">"Can we normalise Pakistani writers writing in English not having to explain themselves? The story is enough. The voice is enough."</div>
+        <p>I believe that deeply. My characters don't exist to educate anyone. They exist because they have stories worth telling.</p>
+      </div>
+
+      <div class="about-section fade-up">
+        <div class="section-eyebrow">The Writing Life</div>
+        <h2>Several WIPs, zero regrets</h2>
+        <p>I'm a multi-project writer, which means I have several works-in-progress at any given time and I've made peace with that. Each one is in a different stage — some are first drafts, some are in revision, some are just vibes and a playlist right now. That's okay. Stories have their own timeline.</p>
+        <p>I'm currently looking for beta readers for some of my projects (Carnival, Letter Kings, Ma'aloe Refrains, Prophecy, Obsession) and I'd love to hear from readers who feel like they're made for these kinds of stories.</p>
+        <p>I also write essays on Substack about writing, literature, and the things that make us human. It's where I go to think out loud.</p>
+      </div>
+
+      <div class="about-section fade-up">
+        <div class="section-eyebrow">What I'm Reading</div>
+        <h2>Books that live in me</h2>
+        <p>My taste is best described as: if it has atmosphere, moral complexity, and prose that makes you stop and reread a line, I'm already in love with it.</p>
+        <div class="recs-grid">
+          <div class="rec-item"><div class="rec-title">Bad Anatomy</div><div class="rec-author">Dani Davis</div></div>
+          <div class="rec-item"><div class="rec-title">Shattered</div><div class="rec-author">Bayside Bolts Book Club</div></div>
+          <div class="rec-item"><div class="rec-title">The Marriage Bot</div><div class="rec-author">Mia Ellayle</div></div>
+          <div class="rec-item"><div class="rec-title">Moonborn</div><div class="rec-author">Ammara Ruwan</div></div>
+          <div class="rec-item"><div class="rec-title">Bookmarker Love</div><div class="rec-author">Yankivoe E. Silva</div></div>
+          <div class="rec-item"><div class="rec-title">Sly Magic</div><div class="rec-author">Adriana Locke</div></div>
+        </div>
+      </div>
+
+      <div class="about-section fade-up">
+        <div class="section-eyebrow">A Few Things</div>
+        <h2>The person behind the prose</h2>
+        <ul class="facts-list">
+          <li><span class="fact-icon">✦</span> Based in Pakistan, writing in English without apology.</li>
+          <li><span class="fact-icon">✦</span> She/her. In my 20s. Perpetually caught between three WIPs.</li>
+          <li><span class="fact-icon">✦</span> Gothic romance reader since before I knew the genre had a name.</li>
+          <li><span class="fact-icon">✦</span> Firm believer that cozy fantasy and emotional devastation can coexist.</li>
+          <li><span class="fact-icon">✦</span> Looking for beta readers who aren't afraid of dark themes and slow burns.</li>
+          <li><span class="fact-icon">✦</span> The End is always just the beginning of a rewrite.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo"><span>B.</span>Shahbaz</a>
+  <div class="footer-links">
+    <a href="about.html">About</a><a href="books.html">Books</a>
+    <a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="contact.html">Contact</a>
+  </div>
+  <div>
+    <div class="footer-copy">© 2024 Bisma Shahbaz. All rights reserved.</div>
+    <div class="footer-socials">
+      <a href="https://instagram.com/b.shahbaz_writer" target="_blank">ig</a>
+      <a href="https://linktr.ee/BismaShahbazWriter" target="_blank">lt</a>
+      <a href="shop.html">ss</a>
+    </div>
+  </div>
+</footer>
+<script src="main.js"></script>
+</body>
+</html>

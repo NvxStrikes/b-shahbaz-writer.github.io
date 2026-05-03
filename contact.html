@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Bisma Shahbaz</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.contact-page { padding: 60px 56px 120px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: start; }
+
+/* Info side */
+.contact-info { }
+.contact-ways { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+.contact-way {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 20px; background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(200,169,110,0.08);
+}
+.cw-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+.cw-body { }
+.cw-label { font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 4px; }
+.cw-value { font-family: var(--font-serif); font-size: 1rem; font-style: italic; color: var(--parchment); }
+.cw-note { font-size: 0.8rem; color: var(--text-dim); margin-top: 3px; }
+
+.beta-info {
+  margin-top: 40px; padding: 24px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(200,169,110,0.1);
+  border-left: 2px solid var(--gold-dim);
+}
+.beta-info h3 { font-family: var(--font-display); font-size: 1.2rem; font-style: italic; color: var(--parchment); margin-bottom: 10px; }
+.beta-info p { font-size: 0.88rem; line-height: 1.75; color: var(--text-mid); }
+.beta-projects { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.beta-project {
+  font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  border: 1px solid rgba(200,169,110,0.15); color: var(--gold-dim);
+  padding: 4px 10px;
+}
+
+/* Form side */
+.contact-form-wrap { position: sticky; top: 100px; }
+.contact-form { display: flex; flex-direction: column; gap: 16px; }
+
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-label { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); }
+.form-input, .form-select, .form-textarea {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(200,169,110,0.1);
+  padding: 13px 16px; color: var(--parchment);
+  font-family: var(--font-body); font-size: 0.95rem;
+  outline: none; transition: border-color 0.3s; width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: rgba(200,169,110,0.35); }
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text-dim); }
+.form-select { appearance: none; cursor: pointer; }
+.form-select option { background: var(--ink-mid); }
+.form-textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.form-submit {
+  background: var(--gold); color: var(--ink);
+  border: none; padding: 16px; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.78rem;
+  letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500;
+  transition: all 0.3s; width: 100%;
+}
+.form-submit:hover { background: var(--gold-light); }
+.form-note { font-size: 0.72rem; color: var(--text-dim); text-align: center; }
+
+.form-success {
+  display: none; padding: 20px; text-align: center;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(200,169,110,0.15);
+}
+.form-success p { font-family: var(--font-serif); font-style: italic; color: var(--parchment); font-size: 1.05rem; }
+
+@media (max-width: 900px) {
+  .contact-page { grid-template-columns: 1fr; padding: 40px 24px 80px; gap: 48px; }
+  .contact-form-wrap { position: static; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo"><span>B.</span>Shahbaz</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+    <li><a href="books.html">Books</a></li><li><a href="articles.html">Articles</a></li>
+    <li><a href="shop.html">Shop & Links</a></li><li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <button class="nav-menu-toggle" id="navToggle"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="mobileNav">
+  <button class="nav-mobile-close" id="mobileClose">✕</button>
+  <a href="index.html">Home</a><a href="about.html">About</a><a href="books.html">Books</a>
+  <a href="articles.html">Articles</a><a href="shop.html">Shop & Links</a><a href="contact.html">Contact</a>
+</div>
+
+<div class="page-wrap">
+  <div class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="page-hero-content">
+      <div class="section-eyebrow">Get in Touch</div>
+      <h1><em style="color:var(--gold)">Contact</em></h1>
+      <p>For beta reading enquiries, collaboration, ARC requests, or just to say hello — I'd love to hear from you.</p>
+    </div>
+  </div>
+
+  <div class="contact-page">
+    <div class="contact-info fade-up">
+      <div class="section-eyebrow">Reach Out</div>
+      <h2 class="section-title" style="font-size:2rem">Let's talk<br><em style="color:var(--gold)">books.</em></h2>
+      <div class="section-divider"></div>
+      <p class="section-body">Whether you're a reader wanting to beta read, a fellow author looking to connect, or someone with an ARC request — my DMs and this form are both open.</p>
+
+      <div class="contact-ways">
+        <div class="contact-way">
+          <div class="cw-icon">📸</div>
+          <div class="cw-body">
+            <div class="cw-label">Instagram</div>
+            <div class="cw-value">@b.shahbaz_writer</div>
+            <div class="cw-note">Fastest response — DMs open</div>
+          </div>
+        </div>
+        <div class="contact-way">
+          <div class="cw-icon">✍️</div>
+          <div class="cw-body">
+            <div class="cw-label">Substack</div>
+            <div class="cw-value">via Linktree</div>
+            <div class="cw-note">For essay discussions & subscriptions</div>
+          </div>
+        </div>
+        <div class="contact-way">
+          <div class="cw-icon">🌿</div>
+          <div class="cw-body">
+            <div class="cw-label">All Links</div>
+            <div class="cw-value">linktr.ee/BismaShahbazWriter</div>
+            <div class="cw-note">Hub for everything Bisma</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="beta-info">
+        <h3>Looking for Beta Readers</h3>
+        <p>Currently seeking beta readers for several projects. If you enjoy gothic romance, literary fiction, or cozy fantasy and want to read early drafts — please reach out through the form or Instagram.</p>
+        <div class="beta-projects">
+          <span class="beta-project">Carnival</span>
+          <span class="beta-project">Letter Kings</span>
+          <span class="beta-project">Prophecy</span>
+          <span class="beta-project">Obsession</span>
+          <span class="beta-project">Ma'aloe Refrains</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form-wrap fade-up fade-up-delay-2">
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input class="form-input" type="text" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" type="email" placeholder="your@email.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reason for reaching out</label>
+          <select class="form-select" id="contactReason">
+            <option value="">Select a reason...</option>
+            <option>Beta Reading — Carnival</option>
+            <option>Beta Reading — Letter Kings</option>
+            <option>Beta Reading — Prophecy</option>
+            <option>Beta Reading — Obsession</option>
+            <option>Beta Reading — Ma'aloe Refrains</option>
+            <option>ARC Request / Review</option>
+            <option>Collaboration</option>
+            <option>General Hello</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your reading preferences (optional)</label>
+          <input class="form-input" type="text" placeholder="Genres you love, tropes you like, DNFs...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" placeholder="Tell me what's on your mind..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send Message ✦</button>
+        <p class="form-note">I typically respond within 3–5 days via email or Instagram DM.</p>
+        <div class="form-success" id="formSuccess">
+          <div style="font-size:2rem;margin-bottom:12px">✦</div>
+          <p>"The End is always just the beginning."<br><span style="font-size:0.8rem;color:var(--text-dim);font-style:normal;font-family:var(--font-body);letter-spacing:0.1em">Message received — I'll be in touch soon.</span></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo"><span>B.</span>Shahbaz</a>
+  <div class="footer-links">
+    <a href="about.html">About</a><a href="books.html">Books</a>
+    <a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="contact.html">Contact</a>
+  </div>
+  <div>
+    <div class="footer-copy">© 2024 Bisma Shahbaz. All rights reserved.</div>
+    <div class="footer-socials">
+      <a href="https://instagram.com/b.shahbaz_writer" target="_blank">ig</a>
+      <a href="https://linktr.ee/BismaShahbazWriter" target="_blank">lt</a>
+    </div>
+  </div>
+</footer>
+<script src="main.js"></script>
+<script>
+document.getElementById('contactForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = 'Sending...'; btn.disabled = true;
+  setTimeout(() => {
+    e.target.querySelectorAll('.form-group, .form-row, .form-note, .form-submit').forEach(el => el.style.display = 'none');
+    document.getElementById('formSuccess').style.display = 'block';
+  }, 1000);
+});
+</script>
+</body>
+</html>
