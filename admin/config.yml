@@ -4,7 +4,6 @@ backend:
   branch: main
   base_url: https://cms-auth.hamayl-shahbaz16.workers.dev
   auth_endpoint: /auth
-  auth_type: implicit
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
