@@ -2,7 +2,8 @@ backend:
   name: github
   repo: NvxStrikes/b-shahbaz-writer.github.io
   branch: main
-  base_url: https://api.decapcms.org
+  base_url: https://cms-auth.hamayl-shahbaz16.workers.dev
+  auth_endpoint: /auth
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
