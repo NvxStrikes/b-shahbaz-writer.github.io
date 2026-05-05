@@ -12,6 +12,7 @@ publish_mode: editorial_workflow
 
 collections:
 
+  # ── BOOKS ──
   - name: "books"
     label: "📚 Books"
     folder: "content/books"
@@ -34,14 +35,15 @@ collections:
           - { label: "Gothic Romance", value: "gothic" }
           - { label: "Literary Fiction", value: "literary" }
           - { label: "Cozy Fantasy", value: "fantasy" }
-      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false, hint: "Upload your book cover here" }
       - { label: "Cover Emoji (if no image)", name: "emoji", widget: "string", required: false, default: "📖" }
-      - { label: "Short Description", name: "description", widget: "text" }
+      - { label: "Short Description", name: "description", widget: "text", hint: "1-2 sentences shown on the books page" }
       - { label: "Full Blurb", name: "body", widget: "markdown", required: false }
-      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false, hint: "e.g. Dark, Slow Burn, Pakistani MC" }
       - { label: "Beta Reading Open?", name: "beta_open", widget: "boolean", default: false }
-      - { label: "Order (lower = first)", name: "order", widget: "number", default: 1 }
+      - { label: "Order (lower = shown first)", name: "order", widget: "number", default: 1 }
 
+  # ── ARTICLES ──
   - name: "articles"
     label: "✍️ Articles"
     folder: "content/articles"
@@ -61,11 +63,12 @@ collections:
           - { label: "Identity & Voice", value: "identity" }
           - { label: "Book Recommendations", value: "recs" }
       - { label: "Publish Date", name: "date", widget: "datetime" }
-      - { label: "Excerpt", name: "excerpt", widget: "text" }
+      - { label: "Excerpt", name: "excerpt", widget: "text", hint: "Short preview shown on articles list" }
       - { label: "External Link (Substack URL)", name: "external_url", widget: "string", required: false }
       - { label: "Featured?", name: "featured", widget: "boolean", default: false }
       - { label: "Full Article Body", name: "body", widget: "markdown", required: false }
 
+  # ── SITE SETTINGS ──
   - name: "settings"
     label: "⚙️ Site Settings"
     files:
@@ -74,23 +77,37 @@ collections:
         name: "homepage"
         file: "content/settings/homepage.json"
         fields:
-          - { label: "Hero Eyebrow", name: "hero_eyebrow", widget: "string" }
-          - { label: "Hero Tagline", name: "hero_tagline", widget: "string" }
+          - { label: "Hero Eyebrow Text", name: "hero_eyebrow", widget: "string", hint: "Small text above name e.g. Aspiring Author · She/Her · PK" }
+          - { label: "First Name", name: "hero_name_first", widget: "string" }
+          - { label: "Last Name (shown in gold)", name: "hero_name_last", widget: "string" }
+          - { label: "Tagline", name: "hero_tagline", widget: "string", hint: "e.g. Writing the stories I couldn't find" }
           - { label: "Hero Quote", name: "hero_quote", widget: "text" }
-          - { label: "Genre Tags", name: "hero_genres", widget: "list" }
-          - { label: "CTA Button 1 Text", name: "cta_primary_text", widget: "string" }
-          - { label: "CTA Button 1 Link", name: "cta_primary_link", widget: "string" }
-          - { label: "CTA Button 2 Text", name: "cta_secondary_text", widget: "string" }
-          - { label: "CTA Button 2 Link", name: "cta_secondary_link", widget: "string" }
-          - { label: "Marquee Items", name: "marquee_items", widget: "list" }
-          - { label: "Intro Eyebrow", name: "intro_eyebrow", widget: "string" }
-          - { label: "Intro Heading", name: "intro_heading", widget: "string" }
+          - { label: "Genre Tags", name: "hero_genres", widget: "list", hint: "Small tags shown under tagline" }
+          - { label: "Button 1 Text", name: "cta_primary_text", widget: "string" }
+          - { label: "Button 1 Link", name: "cta_primary_link", widget: "string" }
+          - { label: "Button 2 Text", name: "cta_secondary_text", widget: "string" }
+          - { label: "Button 2 Link", name: "cta_secondary_link", widget: "string" }
+          - { label: "Marquee Strip Items", name: "marquee_items", widget: "list", hint: "Scrolling text at bottom of hero" }
+          - { label: "Intro Section Eyebrow", name: "intro_eyebrow", widget: "string" }
+          - { label: "Intro Section Heading", name: "intro_heading", widget: "string" }
           - { label: "Intro Paragraph 1", name: "intro_p1", widget: "text" }
           - { label: "Intro Paragraph 2", name: "intro_p2", widget: "text" }
-          - { label: "Big Quote", name: "big_quote", widget: "text" }
-          - { label: "Quote Attribution", name: "quote_attr", widget: "string" }
+          - { label: "Stat 1 Number", name: "intro_stat_1_num", widget: "string" }
+          - { label: "Stat 1 Label", name: "intro_stat_1_label", widget: "string" }
+          - { label: "Stat 2 Number", name: "intro_stat_2_num", widget: "string" }
+          - { label: "Stat 2 Label", name: "intro_stat_2_label", widget: "string" }
+          - { label: "Stat 3 Number", name: "intro_stat_3_num", widget: "string" }
+          - { label: "Stat 3 Label", name: "intro_stat_3_label", widget: "string" }
+          - { label: "Stat 4 Number", name: "intro_stat_4_num", widget: "string" }
+          - { label: "Stat 4 Label", name: "intro_stat_4_label", widget: "string" }
+          - { label: "Intro CTA 1 Text", name: "intro_cta1_text", widget: "string" }
+          - { label: "Intro CTA 1 Link", name: "intro_cta1_link", widget: "string" }
+          - { label: "Intro CTA 2 Text", name: "intro_cta2_text", widget: "string" }
+          - { label: "Intro CTA 2 Link", name: "intro_cta2_link", widget: "string" }
           - { label: "Books Section Eyebrow", name: "books_eyebrow", widget: "string" }
           - { label: "Books Section Heading", name: "books_heading", widget: "string" }
+          - { label: "Big Quote Text", name: "big_quote", widget: "text" }
+          - { label: "Quote Attribution", name: "quote_attr", widget: "string" }
           - { label: "Articles Section Eyebrow", name: "articles_eyebrow", widget: "string" }
           - { label: "Articles Section Heading", name: "articles_heading", widget: "string" }
 
@@ -98,11 +115,12 @@ collections:
         name: "about"
         file: "content/settings/about.json"
         fields:
-          - { label: "Author Photo", name: "photo", widget: "image", required: false }
-          - { label: "Hero Eyebrow", name: "hero_eyebrow", widget: "string" }
-          - { label: "Hero Subtitle", name: "hero_subtitle", widget: "string" }
+          - { label: "Author Photo", name: "photo", widget: "image", required: false, hint: "Upload your photo here" }
+          - { label: "Page Hero Eyebrow", name: "hero_eyebrow", widget: "string" }
+          - { label: "Page Hero Title", name: "hero_title", widget: "string", hint: "e.g. About Bisma." }
+          - { label: "Page Hero Subtitle", name: "hero_subtitle", widget: "text" }
           - { label: "Origin Story Eyebrow", name: "origin_eyebrow", widget: "string" }
-          - { label: "Origin Heading", name: "origin_heading", widget: "string" }
+          - { label: "Origin Story Heading", name: "origin_heading", widget: "string" }
           - { label: "Origin Paragraph 1", name: "origin_p1", widget: "text" }
           - { label: "Origin Paragraph 2", name: "origin_p2", widget: "text" }
           - { label: "Highlight Quote", name: "highlight_quote", widget: "string" }
@@ -110,28 +128,31 @@ collections:
           - { label: "Writing Life Heading", name: "writing_heading", widget: "string" }
           - { label: "Writing Life Paragraph 1", name: "writing_p1", widget: "text" }
           - { label: "Writing Life Paragraph 2", name: "writing_p2", widget: "text" }
-          - { label: "Reading Eyebrow", name: "reading_eyebrow", widget: "string" }
-          - { label: "Reading Heading", name: "reading_heading", widget: "string" }
-          - { label: "Reading Intro", name: "reading_intro", widget: "text" }
+          - { label: "Reading Section Eyebrow", name: "reading_eyebrow", widget: "string" }
+          - { label: "Reading Section Heading", name: "reading_heading", widget: "string" }
+          - { label: "Reading Intro Text", name: "reading_intro", widget: "text" }
           - label: "Book Recommendations"
             name: "recs"
             widget: "list"
+            hint: "Books shown in the reading grid"
             fields:
-              - { label: "Title", name: "title", widget: "string" }
-              - { label: "Author", name: "author", widget: "string" }
-          - { label: "Facts Eyebrow", name: "facts_eyebrow", widget: "string" }
-          - { label: "Facts Heading", name: "facts_heading", widget: "string" }
-          - label: "Fun Facts"
+              - { label: "Book Title", name: "title", widget: "string" }
+              - { label: "Author Name", name: "author", widget: "string" }
+          - { label: "Facts Section Eyebrow", name: "facts_eyebrow", widget: "string" }
+          - { label: "Facts Section Heading", name: "facts_heading", widget: "string" }
+          - label: "Fun Facts List"
             name: "facts"
             widget: "list"
+            hint: "Each line = one fact with ✦ bullet"
             field: { label: "Fact", name: "fact", widget: "string" }
           - label: "Sidebar Links"
             name: "sidebar_links"
             widget: "list"
+            hint: "Quick links shown in the sidebar"
             fields:
-              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Link Label", name: "label", widget: "string" }
               - { label: "URL", name: "url", widget: "string" }
-              - { label: "External?", name: "external", widget: "boolean", default: false }
+              - { label: "Opens in new tab?", name: "external", widget: "boolean", default: false }
 
       - label: "🔗 Social Links & Shop"
         name: "links"
@@ -155,6 +176,50 @@ collections:
         name: "newsletter"
         file: "content/settings/newsletter.json"
         fields:
-          - { label: "Mailchimp Embed URL", name: "mailchimp_url", widget: "string", required: false }
+          - { label: "Mailchimp Form URL", name: "mailchimp_url", widget: "string", required: false }
           - { label: "Newsletter Heading", name: "heading", widget: "string" }
           - { label: "Newsletter Subtext", name: "subtext", widget: "string" }
+
+      - label: "🎨 Theme & Appearance"
+        name: "theme"
+        file: "content/settings/theme.json"
+        fields:
+          - { label: "Accent / Gold Color", name: "accent_color", widget: "color", default: "#c8a96e", hint: "Main gold color used for highlights, buttons, links" }
+          - { label: "Accent Hover Color", name: "accent_hover", widget: "color", default: "#e2c99a" }
+          - { label: "Background Color", name: "bg_color", widget: "color", default: "#0e0b08", hint: "Main dark background" }
+          - { label: "Card/Section Background", name: "bg_mid", widget: "color", default: "#1c1612" }
+          - { label: "Text Color", name: "text_color", widget: "color", default: "#e8ddd0" }
+          - { label: "Secondary Text Color", name: "text_mid", widget: "color", default: "#b8a898" }
+          - { label: "Dim Text Color", name: "text_dim", widget: "color", default: "#7a6a5a", hint: "Used for eyebrow labels and captions" }
+          - { label: "Parchment / Light Color", name: "parchment", widget: "color", default: "#f2e8d9" }
+          - label: "Heading Font"
+            name: "heading_font"
+            widget: "select"
+            default: "IM Fell English"
+            hint: "Used for big titles and name"
+            options:
+              - { label: "IM Fell English (Gothic, default)", value: "IM Fell English" }
+              - { label: "Cormorant Garamond (Elegant)", value: "Cormorant Garamond" }
+              - { label: "Playfair Display (Classic)", value: "Playfair Display" }
+              - { label: "Libre Baskerville (Strong)", value: "Libre Baskerville" }
+              - { label: "Lora (Warm)", value: "Lora" }
+          - label: "Body Font"
+            name: "body_font"
+            widget: "select"
+            default: "Crimson Pro"
+            hint: "Used for paragraphs and small text"
+            options:
+              - { label: "Crimson Pro (Literary, default)", value: "Crimson Pro" }
+              - { label: "Cormorant Garamond (Elegant)", value: "Cormorant Garamond" }
+              - { label: "Lora (Warm)", value: "Lora" }
+              - { label: "Libre Baskerville (Strong)", value: "Libre Baskerville" }
+          - label: "Font Size"
+            name: "base_font_size"
+            widget: "select"
+            default: "medium"
+            hint: "Controls text size across the whole site"
+            options:
+              - { label: "Small", value: "small" }
+              - { label: "Medium (default)", value: "medium" }
+              - { label: "Large", value: "large" }
+              - { label: "Extra Large", value: "extra large" }
