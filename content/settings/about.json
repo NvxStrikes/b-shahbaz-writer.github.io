@@ -1,10 +1,30 @@
 {
   "photo": "",
+  "hero_eyebrow": "The Author",
+  "hero_title": "About Bisma.",
+  "hero_subtitle": "Aspiring author from Pakistan writing gothic romance, literary fiction & cozy fantasy. She/her. Perpetually caffeinated. Several WIPs, zero chill.",
+  "origin_eyebrow": "The Origin Story",
+  "origin_heading": "Writing the stories I couldn't find",
   "origin_p1": "Hi, I'm Bisma. I'm a Pakistani author in my 20s writing gothic romance, literary fiction, and cozy fantasy — three genres that feel wildly different but all share the same DNA: characters who feel too much, worlds that breathe, and stories that reach for something true.",
   "origin_p2": "I started writing because the stories I desperately wanted to read didn't exist. Pakistani protagonists in English gothic fiction. South Asian voices in literary spaces that weren't defined by diaspora trauma. Cozy magic that felt genuinely warm, not performatively cute. So I started writing them myself.",
   "highlight_quote": "Can we normalise Pakistani writers writing in English not having to explain themselves? The story is enough. The voice is enough.",
+  "writing_eyebrow": "The Writing Life",
+  "writing_heading": "Several WIPs, zero regrets",
   "writing_p1": "I'm a multi-project writer, which means I have several works-in-progress at any given time and I've made peace with that. Each one is in a different stage — some are first drafts, some are in revision, some are just vibes and a playlist right now. That's okay. Stories have their own timeline.",
   "writing_p2": "I'm currently looking for beta readers for some of my projects and I'd love to hear from readers who feel like they're made for these kinds of stories. I also write essays on Substack about writing, literature, and the things that make us human.",
+  "reading_eyebrow": "What I'm Reading",
+  "reading_heading": "Books that live in me",
+  "reading_intro": "My taste is best described as: if it has atmosphere, moral complexity, and prose that makes you stop and reread a line, I'm already in love with it.",
+  "recs": [
+    { "title": "Bad Anatomy", "author": "Dani Davis" },
+    { "title": "Shattered", "author": "Bayside Bolts Book Club" },
+    { "title": "The Marriage Bot", "author": "Mia Ellayle" },
+    { "title": "Moonborn", "author": "Ammara Ruwan" },
+    { "title": "Bookmarker Love", "author": "Yankivoe E. Silva" },
+    { "title": "Sly Magic", "author": "Adriana Locke" }
+  ],
+  "facts_eyebrow": "A Few Things",
+  "facts_heading": "The person behind the prose",
   "facts": [
     "Based in Pakistan, writing in English without apology.",
     "She/her. In my 20s. Perpetually caught between three WIPs.",
@@ -12,5 +32,12 @@
     "Firm believer that cozy fantasy and emotional devastation can coexist.",
     "Looking for beta readers who aren't afraid of dark themes and slow burns.",
     "The End is always just the beginning of a rewrite."
+  ],
+  "sidebar_links": [
+    { "label": "My Books", "url": "books.html", "external": false },
+    { "label": "Substack Essays", "url": "articles.html", "external": false },
+    { "label": "Instagram", "url": "https://instagram.com/b.shahbaz_writer", "external": true },
+    { "label": "All Links", "url": "https://linktr.ee/BismaShahbazWriter", "external": true },
+    { "label": "Beta Reading Enquiry", "url": "contact.html", "external": false }
   ]
 }
