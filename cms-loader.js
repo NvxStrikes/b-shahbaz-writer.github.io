@@ -1,82 +1,209 @@
 // ══════════════════════════════════════
-// CMS LOADER — bisma-shahbaz.netlify.app
-// Reads content files and injects into pages
+// CMS LOADER v3 — bisma-shahbaz
 // ══════════════════════════════════════
 
-// ── PARSE FRONTMATTER from markdown ──
+// ── PARSE FRONTMATTER ──
 function parseFrontmatter(text) {
   const match = text.match(/^---\n([\s\S]*?)\n---/);
   if (!match) return { meta: {}, body: text };
   const meta = {};
-  match[1].split('\n').forEach(line => {
-    const [key, ...rest] = line.split(':');
-    if (!key || !rest.length) return;
-    let val = rest.join(':').trim().replace(/^["']|["']$/g, '');
+  const raw = match[1];
+
+  // Simple key: value
+  raw.split('\n').forEach(line => {
+    const colonIdx = line.indexOf(':');
+    if (colonIdx < 0) return;
+    const key = line.slice(0, colonIdx).trim();
+    let val = line.slice(colonIdx + 1).trim().replace(/^["']|["']$/g, '');
     if (val === 'true') val = true;
     else if (val === 'false') val = false;
-    else if (!isNaN(val) && val !== '') val = Number(val);
-    meta[key.trim()] = val;
+    else if (val !== '' && !isNaN(val)) val = Number(val);
+    if (key) meta[key] = val;
   });
-  // Parse list arrays like tags: ["a", "b"]
-  match[1].replace(/^(\w+):\s*\[(.*?)\]/gm, (_, k, v) => {
-    meta[k] = v.split(',').map(s => s.trim().replace(/^["']|["']$/g, ''));
+
+  // Inline arrays like tags: ["a","b"]
+  [...raw.matchAll(/^(\w+):\s*\[(.*?)\]/gm)].forEach(([, k, v]) => {
+    meta[k] = v.split(',').map(s => s.trim().replace(/^["']|["']$/g, '')).filter(Boolean);
   });
-  // Parse yaml lists
-  const bodyText = text.replace(/^---[\s\S]*?---\n?/, '');
-  return { meta, body: bodyText.trim() };
+
+  return { meta, body: text.replace(/^---[\s\S]*?---\n?/, '').trim() };
 }
 
-// ── FETCH JSON settings ──
-async function fetchSettings(file) {
+// ── FETCH JSON ──
+async function fetchJSON(path) {
   try {
-    const res = await fetch(`/content/settings/${file}?t=${Date.now()}`);
+    const res = await fetch(path + '?t=' + Date.now());
     if (!res.ok) return null;
     return await res.json();
   } catch { return null; }
 }
 
-// ── FETCH all markdown files in a folder ──
+// ── FETCH COLLECTION (markdown files) ──
 async function fetchCollection(folder) {
   try {
-    // Fetch the GitHub API to list files
-    const res = await fetch(`/content/${folder}/`);
+    const res = await fetch(`/content/${folder}/?t=` + Date.now());
     const text = await res.text();
-    // Parse file links from directory listing
-    const matches = [...text.matchAll(/href="([^"]+\.md)"/g)];
-    const files = matches.map(m => m[1].split('/').pop());
+    const files = [...text.matchAll(/href="([^"]+\.md)"/g)].map(m => m[1].split('/').pop());
     if (!files.length) return [];
-    const items = await Promise.all(
-      files.map(async f => {
-        const r = await fetch(`/content/${folder}/${f}?t=${Date.now()}`);
-        const t = await r.text();
-        const parsed = parseFrontmatter(t);
-        return { ...parsed.meta, body: parsed.body, _file: f };
-      })
-    );
+    const items = await Promise.all(files.map(async f => {
+      const r = await fetch(`/content/${folder}/${f}?t=` + Date.now());
+      const t = await r.text();
+      const { meta, body } = parseFrontmatter(t);
+      return { ...meta, body, _file: f };
+    }));
     return items.sort((a, b) => (a.order || 99) - (b.order || 99));
   } catch { return []; }
 }
 
-// ── STATUS BADGE helper ──
+// ── HELPERS ──
+const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.textContent = val; };
+const setHTML = (id, val) => { const el = document.getElementById(id); if (el && val) el.innerHTML = val; };
+const setHref = (id, val) => { const el = document.getElementById(id); if (el && val) el.href = val; };
+
 function statusBadge(status) {
-  const map = {
-    published: ['Published', 'badge-published'],
-    wip:       ['WIP', 'badge-wip'],
-    upcoming:  ['Coming Soon', 'badge-upcoming'],
-    beta:      ['Beta Readers Open', 'badge-beta'],
-  };
-  const [label, cls] = map[status] || ['WIP', 'badge-wip'];
-  return `<span class="book-badge ${cls}">${label}</span>`;
+  const map = { published:['Published','status-published'], wip:['WIP','status-wip'], upcoming:['Coming Soon','status-upcoming'], beta:['Beta Readers Open','status-beta'] };
+  const [label, cls] = map[status] || ['WIP','status-wip'];
+  return `<span class="book-status ${cls}">${label}</span>`;
+}
+function genreGrad(genre) {
+  return { gothic:'linear-gradient(160deg,#1c1210,#0e0b08)', literary:'linear-gradient(160deg,#181010,#0e0b08)', fantasy:'linear-gradient(160deg,#101820,#0e0b08)' }[genre] || 'linear-gradient(160deg,#1a1612,#0e0b08)';
+}
+function catLabel(cat) {
+  return { essay:'Substack Essay', writing:'On Writing', review:'ARC Review', 'series-review':'Series Review', reflection:'Reflection', identity:'Identity & Voice', recs:'Book Recs' }[cat] || 'Essay';
 }
 
-// ── GENRE COLOR helper ──
-function genreGradient(genre) {
-  const map = {
-    gothic:  'linear-gradient(160deg,#1c1210,#0e0b08)',
-    literary:'linear-gradient(160deg,#181010,#0e0b08)',
-    fantasy: 'linear-gradient(160deg,#101820,#0e0b08)',
-  };
-  return map[genre] || 'linear-gradient(160deg,#1a1612,#0e0b08)';
+// ── BOOK CARD HTML ──
+function bookCardHTML(book, i, classes='book-card card') {
+  const delay = i > 0 ? ` fade-up-delay-${Math.min(i,5)}` : '';
+  return `
+    <div class="${classes} fade-up${delay}" data-tags="${book.genre||''} ${book.status||''}">
+      <div class="book-cover" style="background:${genreGrad(book.genre)};">
+        ${statusBadge(book.status)}
+        ${book.cover
+          ? `<img src="${book.cover}" alt="${book.title}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`
+          : `<div class="book-cover-inner">
+              <div class="book-cover-ornament">${book.emoji||'📖'}</div>
+              <div class="book-cover-title">${book.title||'Untitled'}</div>
+              <div class="book-cover-author">Bisma Shahbaz</div>
+            </div>`
+        }
+      </div>
+      <div class="book-info">
+        <div class="book-title">${book.title||'Untitled'}</div>
+        <div class="book-genre">${book.genre ? book.genre.charAt(0).toUpperCase()+book.genre.slice(1) : ''} · ${book.status==='published'?'Published':book.status==='beta'?'Beta Open':'WIP'}</div>
+      </div>
+    </div>`;
+}
+
+// ── ARTICLE ITEM HTML ──
+function articleItemHTML(article, i) {
+  const dateStr = article.date ? new Date(article.date).toLocaleDateString('en-GB',{year:'numeric',month:'long'}) : '';
+  return `
+    <a href="${article.external_url||'#'}" target="_blank" class="article-item fade-up">
+      <div class="ai-num">0${i+1}</div>
+      <div class="ai-body">
+        <div class="ai-meta"><span class="ai-tag">${catLabel(article.category)}</span><span class="ai-date">${dateStr}</span></div>
+        <div class="ai-title">${article.title||'Untitled'}</div>
+        <p class="ai-excerpt">${article.excerpt||''}</p>
+        <div class="ai-read">Read Essay →</div>
+      </div>
+    </a>`;
+}
+
+// ── FADE OBSERVER ──
+function observeFade(container) {
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:0.1});
+  (container||document).querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+}
+
+// ══════════════════════════════════════
+// HOMEPAGE
+// ══════════════════════════════════════
+async function loadHomepage() {
+  const data = await fetchJSON('/content/settings/homepage.json');
+  if (data) {
+    set('heroEyebrow', data.hero_eyebrow);
+    set('heroNameFirst', data.hero_name_first);
+    set('heroNameLast', data.hero_name_last);
+    set('heroTagline', data.hero_tagline);
+    set('heroQuote', data.hero_quote);
+    set('introEyebrow', data.intro_eyebrow);
+    set('introHeading', data.intro_heading);
+    set('introP1', data.intro_p1);
+    set('introP2', data.intro_p2);
+    set('stat1Num', data.intro_stat_1_num); set('stat1Label', data.intro_stat_1_label);
+    set('stat2Num', data.intro_stat_2_num); set('stat2Label', data.intro_stat_2_label);
+    set('stat3Num', data.intro_stat_3_num); set('stat3Label', data.intro_stat_3_label);
+    set('stat4Num', data.intro_stat_4_num); set('stat4Label', data.intro_stat_4_label);
+    set('booksEyebrow', data.books_eyebrow);
+    set('booksHeading', data.books_heading);
+    set('bigQuote', data.big_quote);
+    set('quoteAttr', data.quote_attr);
+    set('articlesEyebrow', data.articles_eyebrow);
+    set('articlesHeading', data.articles_heading);
+
+    // CTA buttons
+    const cta1 = document.getElementById('heroCta1');
+    const cta2 = document.getElementById('heroCta2');
+    if (cta1) { if (data.cta_primary_text) cta1.textContent = data.cta_primary_text; if (data.cta_primary_link) cta1.href = data.cta_primary_link; }
+    if (cta2) { if (data.cta_secondary_text) cta2.textContent = data.cta_secondary_text + ' →'; if (data.cta_secondary_link) cta2.href = data.cta_secondary_link; }
+
+    const ic1 = document.getElementById('introCta1');
+    const ic2 = document.getElementById('introCta2');
+    if (ic1) { if (data.intro_cta1_text) ic1.textContent = data.intro_cta1_text; if (data.intro_cta1_link) ic1.href = data.intro_cta1_link; }
+    if (ic2) { if (data.intro_cta2_text) ic2.textContent = data.intro_cta2_text + ' →'; if (data.intro_cta2_link) ic2.href = data.intro_cta2_link; }
+
+    // Genre tags
+    if (data.hero_genres && data.hero_genres.length) {
+      const genres = document.getElementById('heroGenres');
+      if (genres) genres.innerHTML = data.hero_genres.map(g => `<span class="genre-tag">${g}</span>`).join('');
+    }
+
+    // Marquee
+    if (data.marquee_items && data.marquee_items.length) {
+      const marquee = document.getElementById('marqueeInner');
+      if (marquee) {
+        const doubled = [...data.marquee_items, ...data.marquee_items];
+        marquee.innerHTML = doubled.map(m => `<span class="marquee-item">${m}</span>`).join('');
+      }
+    }
+  }
+
+  // Books
+  const booksRow = document.getElementById('homeBooksRow');
+  if (booksRow) {
+    const books = await fetchCollection('books');
+    if (books.length) {
+      booksRow.innerHTML = books.slice(0,3).map((b,i) => bookCardHTML(b,i)).join('');
+      observeFade(booksRow);
+    } else {
+      booksRow.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-dim);font-style:italic;font-family:var(--font-serif)">No books added yet.</div>`;
+    }
+  }
+
+  // Articles
+  const articlesRow = document.getElementById('homeArticlesRow');
+  if (articlesRow) {
+    const articles = await fetchCollection('articles');
+    articles.sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
+    if (articles.length) {
+      articlesRow.innerHTML = articles.slice(0,3).map((a,i) => `
+        <div class="article-card card fade-up${i>0?` fade-up-delay-${i}`:''}">
+          <div class="article-num">0${i+1}</div>
+          <div class="article-tag">${catLabel(a.category)}</div>
+          <div class="article-title">${a.title}</div>
+          <p class="article-excerpt">${a.excerpt||''}</p>
+          <div class="article-date">${a.date?new Date(a.date).toLocaleDateString('en-GB',{year:'numeric',month:'long'}):'Essay'}</div>
+        </div>`).join('');
+      observeFade(articlesRow);
+    } else {
+      articlesRow.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-dim);font-style:italic;font-family:var(--font-serif)">No articles added yet.</div>`;
+    }
+  }
+
+  // Author photo
+  const links = await fetchJSON('/content/settings/links.json');
+  if (links) loadSocialLinks(links);
 }
 
 // ══════════════════════════════════════
@@ -85,43 +212,33 @@ function genreGradient(genre) {
 async function loadBooks() {
   const grid = document.getElementById('booksGrid');
   if (!grid) return;
-
   grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-dim);font-style:italic;font-family:var(--font-serif)">Loading books...</div>`;
-
   const books = await fetchCollection('books');
-
   if (!books.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-dim);font-style:italic;font-family:var(--font-serif)">No books yet — check back soon.</div>`;
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-dim);font-style:italic;font-family:var(--font-serif)">No books added yet — check back soon.</div>`;
     return;
   }
-
-  grid.innerHTML = books.map((book, i) => `
-    <div class="book-item fade-up ${i > 0 ? `fade-up-delay-${Math.min(i,5)}` : ''}" data-tags="${book.genre || ''} ${book.status || ''}">
-      <div class="book-cover-wrap" style="background:${genreGradient(book.genre)};">
-        ${statusBadge(book.status)}
-        ${book.cover
-          ? `<img src="${book.cover}" alt="${book.title}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`
+  grid.innerHTML = books.map((b,i) => `
+    <div class="book-item fade-up${i>0?` fade-up-delay-${Math.min(i,5)}`:''}" data-tags="${b.genre||''} ${b.status||''}">
+      <div class="book-cover-wrap" style="background:${genreGrad(b.genre)};">
+        ${statusBadge(b.status)}
+        ${b.cover
+          ? `<img src="${b.cover}" alt="${b.title}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">`
           : `<div class="book-cover-art">
-              <div class="bca-ornament">${book.emoji || '📖'}</div>
-              <div class="bca-title">${book.title || 'Untitled'}</div>
+              <div class="bca-ornament">${b.emoji||'📖'}</div>
+              <div class="bca-title">${b.title||'Untitled'}</div>
               <div class="bca-author">Bisma Shahbaz</div>
             </div>`
         }
       </div>
       <div class="book-meta">
-        <div class="bm-title">${book.title || 'Untitled'}</div>
-        <div class="bm-genre">${book.genre ? book.genre.charAt(0).toUpperCase() + book.genre.slice(1) : ''} ${book.status === 'wip' ? '· WIP' : book.status === 'published' ? '· Published' : book.status === 'beta' ? '· Beta Open' : '· Coming Soon'}</div>
-        ${book.description ? `<div class="bm-desc" style="display:block">${book.description}</div>` : ''}
-        ${book.tags && book.tags.length ? `<div class="bm-tags">${book.tags.map(t => `<span class="bm-tag">${t}</span>`).join('')}</div>` : ''}
+        <div class="bm-title">${b.title||'Untitled'}</div>
+        <div class="bm-genre">${b.genre?b.genre.charAt(0).toUpperCase()+b.genre.slice(1):''} · ${b.status==='published'?'Published':b.status==='beta'?'Beta Open':'WIP'}</div>
+        ${b.description?`<div class="bm-desc">${b.description}</div>`:''}
+        ${b.tags&&b.tags.length?`<div class="bm-tags">${b.tags.map(t=>`<span class="bm-tag">${t}</span>`).join('')}</div>`:''}
       </div>
-    </div>
-  `).join('');
-
-  // Re-observe fade-up elements
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  grid.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    </div>`).join('');
+  observeFade(grid);
 }
 
 // ══════════════════════════════════════
@@ -131,215 +248,134 @@ async function loadArticles() {
   const list = document.getElementById('articlesList');
   const featured = document.getElementById('articleFeatured');
   if (!list) return;
-
-  list.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text-dim);font-style:italic;font-family:var(--font-serif)">Loading articles...</div>`;
-
+  list.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text-dim);font-style:italic">Loading articles...</div>`;
   const articles = await fetchCollection('articles');
-
+  articles.sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
   if (!articles.length) {
-    list.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text-dim);font-style:italic;font-family:var(--font-serif)">No articles yet — check back soon.</div>`;
+    list.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text-dim);font-style:italic">No articles added yet.</div>`;
     return;
   }
-
-  // Sort by date newest first
-  articles.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-
-  const featuredArticle = articles.find(a => a.featured) || articles[0];
-  const rest = articles.filter(a => a._file !== featuredArticle._file);
-
-  // Featured
+  const featuredArticle = articles.find(a=>a.featured) || articles[0];
+  const rest = articles.filter(a=>a._file!==featuredArticle._file);
   if (featured && featuredArticle) {
-    const catLabel = {
-      essay: 'Substack Essay', writing: 'On Writing', review: 'ARC Review',
-      'series-review': 'Series Review', reflection: 'Reflection',
-      identity: 'Identity & Voice', recs: 'Book Recommendations'
-    }[featuredArticle.category] || 'Essay';
-
     featured.innerHTML = `
-      <span class="af-badge">${featuredArticle.featured ? 'Latest Essay' : catLabel}</span>
-      <div class="af-title">${featuredArticle.title || 'Untitled'}</div>
-      <p class="af-excerpt">${featuredArticle.excerpt || ''}</p>
-      <a href="${featuredArticle.external_url || '#'}" target="_blank" class="btn btn-outline">Read on Substack →</a>
-    `;
+      <span class="af-badge">Latest Essay</span>
+      <div class="af-title">${featuredArticle.title||'Untitled'}</div>
+      <p class="af-excerpt">${featuredArticle.excerpt||''}</p>
+      <a href="${featuredArticle.external_url||'#'}" target="_blank" class="btn btn-outline">Read on Substack →</a>`;
   }
-
-  // List
-  list.innerHTML = rest.map((article, i) => {
-    const catLabel = {
-      essay: 'Substack Essay', writing: 'On Writing', review: 'ARC Review',
-      'series-review': 'Series Review', reflection: 'Reflection',
-      identity: 'Identity & Voice', recs: 'Book Recommendations'
-    }[article.category] || 'Essay';
-
-    const dateStr = article.date ? new Date(article.date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long' }) : '';
-
-    return `
-      <a href="${article.external_url || '#'}" target="_blank" class="article-item fade-up">
-        <div class="ai-num">0${i + 1}</div>
-        <div class="ai-body">
-          <div class="ai-meta">
-            <span class="ai-tag">${catLabel}</span>
-            <span class="ai-date">${dateStr}</span>
-          </div>
-          <div class="ai-title">${article.title || 'Untitled'}</div>
-          <p class="ai-excerpt">${article.excerpt || ''}</p>
-          <div class="ai-read">Read Essay →</div>
-        </div>
-      </a>
-    `;
-  }).join('');
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  list.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-}
-
-// ══════════════════════════════════════
-// HOMEPAGE
-// ══════════════════════════════════════
-async function loadHomepage() {
-  const data = await fetchSettings('homepage.json');
-  if (!data) return;
-
-  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
-  const setHTML = (id, val) => { const el = document.getElementById(id); if (el && val) el.innerHTML = val; };
-
-  set('heroTagline', data.hero_tagline);
-  set('heroQuote', data.hero_quote);
-  set('introParagraph1', data.intro_p1);
-  set('introParagraph2', data.intro_p2);
-  set('bigQuote', data.big_quote);
-  set('quoteAttr', data.quote_attr);
-
-  // Load featured books on homepage too
-  const booksRow = document.getElementById('homeBooksRow');
-  if (booksRow) {
-    const books = await fetchCollection('books');
-    const featured = books.slice(0, 3);
-    if (featured.length) {
-      booksRow.innerHTML = featured.map((book, i) => `
-        <div class="book-card card fade-up ${i > 0 ? `fade-up-delay-${i + 1}` : ''}">
-          <div class="book-cover" style="background:${genreGradient(book.genre)};">
-            <span class="book-status status-${book.status || 'wip'}">${
-              { published:'Published', wip:'WIP', upcoming:'Coming Soon', beta:'Beta Readers Open' }[book.status] || 'WIP'
-            }</span>
-            ${book.cover
-              ? `<img src="${book.cover}" alt="${book.title}" style="width:100%;height:100%;object-fit:cover;">`
-              : `<div class="book-cover-inner">
-                  <div class="book-cover-ornament">${book.emoji || '📖'}</div>
-                  <div class="book-cover-title">${book.title}</div>
-                  <div class="book-cover-author">Bisma Shahbaz</div>
-                </div>`
-            }
-          </div>
-          <div class="book-info">
-            <div class="book-title">${book.title}</div>
-            <div class="book-genre">${book.genre ? book.genre.charAt(0).toUpperCase() + book.genre.slice(1) : ''} · ${book.status === 'wip' || book.status === 'beta' ? 'WIP' : book.status === 'published' ? 'Published' : 'Coming Soon'}</div>
-          </div>
-        </div>
-      `).join('');
-    }
-  }
-
-  // Load latest articles on homepage
-  const articlesRow = document.getElementById('homeArticlesRow');
-  if (articlesRow) {
-    const articles = await fetchCollection('articles');
-    articles.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-    const latest = articles.slice(0, 3);
-    if (latest.length) {
-      articlesRow.innerHTML = latest.map((a, i) => `
-        <div class="article-card card fade-up ${i > 0 ? `fade-up-delay-${i + 1}` : ''}">
-          <div class="article-num">0${i + 1}</div>
-          <div class="article-tag">${{ essay:'Substack Essay', writing:'On Writing', review:'ARC Review', reflection:'Reflection', identity:'Identity & Voice', recs:'Book Recs' }[a.category] || 'Essay'}</div>
-          <div class="article-title">${a.title}</div>
-          <p class="article-excerpt">${a.excerpt || ''}</p>
-          <div class="article-date">${a.date ? new Date(a.date).toLocaleDateString('en-GB', { year:'numeric', month:'long' }) : 'Essay'}</div>
-        </div>
-      `).join('');
-    }
-  }
+  list.innerHTML = rest.map((a,i) => articleItemHTML(a,i)).join('');
+  observeFade(list);
 }
 
 // ══════════════════════════════════════
 // ABOUT PAGE
 // ══════════════════════════════════════
 async function loadAbout() {
-  const data = await fetchSettings('about.json');
+  const data = await fetchJSON('/content/settings/about.json');
   if (!data) return;
 
-  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
+  // Hero
+  set('aboutHeroEyebrow', data.hero_eyebrow);
+  set('aboutHeroTitle', data.hero_title);
+  set('aboutHeroSubtitle', data.hero_subtitle);
 
+  // Origin
+  set('aboutOriginEyebrow', data.origin_eyebrow);
+  set('aboutOriginHeading', data.origin_heading);
   set('aboutOriginP1', data.origin_p1);
   set('aboutOriginP2', data.origin_p2);
   set('aboutHighlightQuote', data.highlight_quote);
+
+  // Writing life
+  set('aboutWritingEyebrow', data.writing_eyebrow);
+  set('aboutWritingHeading', data.writing_heading);
   set('aboutWritingP1', data.writing_p1);
   set('aboutWritingP2', data.writing_p2);
+
+  // Reading
+  set('aboutReadingEyebrow', data.reading_eyebrow);
+  set('aboutReadingHeading', data.reading_heading);
+  set('aboutReadingIntro', data.reading_intro);
+
+  // Book recs grid
+  if (data.recs && data.recs.length) {
+    const recsGrid = document.getElementById('aboutRecs');
+    if (recsGrid) {
+      recsGrid.innerHTML = data.recs.map(r => `
+        <div class="rec-item">
+          <div class="rec-title">${r.title}</div>
+          <div class="rec-author">${r.author}</div>
+        </div>`).join('');
+    }
+  }
+
+  // Facts
+  set('aboutFactsEyebrow', data.facts_eyebrow);
+  set('aboutFactsHeading', data.facts_heading);
+  if (data.facts && data.facts.length) {
+    const factsList = document.getElementById('aboutFacts');
+    if (factsList) factsList.innerHTML = data.facts.map(f=>`<li><span class="fact-icon">✦</span> ${f}</li>`).join('');
+  }
+
+  // Sidebar links
+  if (data.sidebar_links && data.sidebar_links.length) {
+    const sidebar = document.getElementById('aboutSidebarLinks');
+    if (sidebar) {
+      sidebar.innerHTML = data.sidebar_links.map(l=>`
+        <a href="${l.url}" ${l.external?'target="_blank"':''} class="sidebar-link">
+          ${l.label} <span>${l.external?'↗':'→'}</span>
+        </a>`).join('');
+    }
+  }
 
   // Photo
   if (data.photo) {
     const frame = document.getElementById('authorPhotoFrame');
-    if (frame) {
-      frame.innerHTML = `<img src="${data.photo}" alt="Bisma Shahbaz" style="width:100%;height:100%;object-fit:cover;">`;
-    }
-  }
-
-  // Facts list
-  if (data.facts && data.facts.length) {
-    const factsList = document.getElementById('aboutFacts');
-    if (factsList) {
-      factsList.innerHTML = data.facts.map(f => `
-        <li><span class="fact-icon">✦</span> ${f}</li>
-      `).join('');
-    }
+    if (frame) frame.innerHTML = `<img src="${data.photo}" alt="Bisma Shahbaz" style="width:100%;height:100%;object-fit:cover;">`;
   }
 }
 
 // ══════════════════════════════════════
-// SHOP / LINKS PAGE
+// SOCIAL LINKS
 // ══════════════════════════════════════
-async function loadLinks() {
-  const data = await fetchSettings('links.json');
+function loadSocialLinks(data) {
+  document.querySelectorAll('[data-social="instagram"]').forEach(a => { if(data.instagram) a.href=data.instagram; });
+  document.querySelectorAll('[data-social="linktree"]').forEach(a => { if(data.linktree) a.href=data.linktree; });
+  document.querySelectorAll('[data-social="substack"]').forEach(a => { if(data.substack) a.href=data.substack; });
+  const handle = document.getElementById('instagramHandle');
+  if (handle && data.instagram_handle) handle.textContent = data.instagram_handle;
+}
+
+async function loadShop() {
+  const data = await fetchJSON('/content/settings/links.json');
   if (!data) return;
-
-  const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.href = val; };
-  const setText = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
-
-  set('linkInstagram', data.instagram);
-  set('linkLinktree', data.linktree);
-  set('linkSubstack', data.substack);
-  setText('instagramHandle', data.instagram_handle);
-
-  // Extra links
+  loadSocialLinks(data);
+  const ig = document.getElementById('linkInstagram');
+  const lt = document.getElementById('linkLinktree');
+  const ss = document.getElementById('linkSubstack');
+  if (ig && data.instagram) ig.href = data.instagram;
+  if (lt && data.linktree) lt.href = data.linktree;
+  if (ss && data.substack) ss.href = data.substack;
   if (data.extra_links && data.extra_links.length) {
-    const extraContainer = document.getElementById('extraLinks');
-    if (extraContainer) {
-      extraContainer.innerHTML = data.extra_links.map(link => `
-        <a href="${link.url}" target="_blank" class="link-card">
-          <div class="lc-icon">${link.icon || '🔗'}</div>
-          <div class="lc-body">
-            <div class="lc-title">${link.title}</div>
-            <div class="lc-desc">${link.desc || ''}</div>
-          </div>
+    const extra = document.getElementById('extraLinks');
+    if (extra) {
+      extra.innerHTML = data.extra_links.map(l=>`
+        <a href="${l.url}" target="_blank" class="link-card">
+          <div class="lc-icon">${l.icon||'🔗'}</div>
+          <div class="lc-body"><div class="lc-title">${l.title}</div><div class="lc-desc">${l.desc||''}</div></div>
           <div class="lc-arrow">↗</div>
-        </a>
-      `).join('');
+        </a>`).join('');
     }
   }
-
-  // Update all footer social links across site
-  document.querySelectorAll('a[data-social="instagram"]').forEach(a => { if (data.instagram) a.href = data.instagram; });
-  document.querySelectorAll('a[data-social="linktree"]').forEach(a => { if (data.linktree) a.href = data.linktree; });
-  document.querySelectorAll('a[data-social="substack"]').forEach(a => { if (data.substack) a.href = data.substack; });
 }
 
 // ══════════════════════════════════════
-// AUTO-DETECT PAGE & RUN
+// AUTO DETECT & RUN
 // ══════════════════════════════════════
 const page = window.location.pathname.split('/').pop() || 'index.html';
-if (page === 'index.html' || page === '') loadHomepage();
-if (page === 'books.html') loadBooks();
-if (page === 'articles.html') loadArticles();
-if (page === 'about.html') loadAbout();
-if (page === 'shop.html') loadLinks();
+if (page===''||page==='index.html') loadHomepage();
+if (page==='books.html') loadBooks();
+if (page==='articles.html') loadArticles();
+if (page==='about.html') loadAbout();
+if (page==='shop.html') loadShop();
