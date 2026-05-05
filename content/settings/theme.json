@@ -1,0 +1,16 @@
+{
+  "accent_color": "#c8a96e",
+  "accent_hover": "#e2c99a",
+  "bg_color": "#0e0b08",
+  "bg_mid": "#1c1612",
+  "bg_soft": "#2a221a",
+  "text_color": "#e8ddd0",
+  "text_mid": "#b8a898",
+  "text_dim": "#7a6a5a",
+  "parchment": "#f2e8d9",
+  "heading_font": "IM Fell English",
+  "body_font": "Crimson Pro",
+  "base_font_size": "medium",
+  "eyebrow_size": "medium",
+  "heading_size": "medium"
+}
