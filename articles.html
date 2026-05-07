@@ -6,110 +6,73 @@
 <link rel="stylesheet" href="style.css">
 <style>
 .articles-page { padding: 60px 56px 120px; }
-.articles-layout { display: grid; grid-template-columns: 1fr 320px; gap: 64px; align-items: start; }
+.articles-layout { display: grid; grid-template-columns: 1fr 300px; gap: 60px; align-items: start; }
 
-/* Main articles list */
-.articles-list { display: flex; flex-direction: column; gap: 0; }
+/* Featured article */
+.article-featured {
+  padding: 36px; background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(200,169,110,0.12); margin-bottom: 40px;
+  position: relative; overflow: hidden;
+}
+.article-featured::before { content: '✦'; position: absolute; right: 24px; top: 20px; font-size: 5rem; color: rgba(200,169,110,0.05); font-family: var(--font-display); }
+.af-badge { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; background: var(--accent); color: var(--bg); padding: 4px 12px; display: inline-block; margin-bottom: 14px; }
+.af-title { font-family: var(--font-display); font-size: var(--fs-h3); font-style: italic; color: var(--parchment); line-height: 1.25; margin-bottom: 12px; }
+.af-excerpt { font-size: var(--fs-body-lg); line-height: 1.8; color: var(--text-mid); margin-bottom: 22px; }
+
+/* Articles list */
+.articles-list { display: flex; flex-direction: column; }
 .article-item {
-  padding: 36px 0; border-bottom: 1px solid rgba(200,169,110,0.07);
-  display: grid; grid-template-columns: 80px 1fr; gap: 28px; align-items: start;
+  padding: 32px 0; border-bottom: 1px solid rgba(200,169,110,0.07);
+  display: grid; grid-template-columns: 64px 1fr; gap: 24px; align-items: start;
   text-decoration: none; transition: all 0.3s;
 }
-.article-item:hover .ai-title { color: var(--gold); }
 .article-item:first-child { padding-top: 0; }
-.ai-num {
-  font-family: var(--font-display); font-size: 2.8rem; line-height: 1;
-  color: rgba(200,169,110,0.15); font-style: italic; text-align: right;
-  padding-top: 4px;
-}
-.ai-body { }
-.ai-meta { display: flex; gap: 16px; align-items: center; margin-bottom: 10px; }
-.ai-tag {
-  font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--gold-dim); border: 1px solid rgba(200,169,110,0.15);
-  padding: 3px 10px;
-}
-.ai-date { font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-dim); }
-.ai-title {
-  font-family: var(--font-serif); font-size: 1.25rem; font-style: italic;
-  color: var(--parchment); line-height: 1.4; margin-bottom: 10px;
-  transition: color 0.3s;
-}
-.ai-excerpt { font-size: 0.92rem; line-height: 1.75; color: var(--text-mid); margin-bottom: 14px; }
-.ai-read { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-dim); display: flex; align-items: center; gap: 6px; transition: gap 0.3s; }
-.article-item:hover .ai-read { gap: 12px; color: var(--gold); }
+.article-item:hover .ai-title { color: var(--accent); }
+.ai-num { font-family: var(--font-display); font-size: 2.5rem; line-height: 1; color: rgba(200,169,110,0.12); font-style: italic; text-align: right; padding-top: 3px; }
+.ai-meta { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+.ai-tag { font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); border: 1px solid rgba(200,169,110,0.15); padding: 3px 10px; }
+.ai-date { font-size: var(--fs-eyebrow); letter-spacing: 0.1em; color: var(--text-dim); }
+.ai-title { font-family: var(--font-serif); font-size: var(--fs-body-lg); font-style: italic; color: var(--parchment); line-height: 1.4; margin-bottom: 8px; transition: color 0.3s; }
+.ai-excerpt { font-size: var(--fs-body); line-height: 1.75; color: var(--text-mid); margin-bottom: 12px; }
+.ai-read { font-size: var(--fs-eyebrow); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); display: flex; align-items: center; gap: 6px; transition: all 0.3s; }
+.article-item:hover .ai-read { gap: 12px; color: var(--accent); }
 
 /* Sidebar */
 .articles-sidebar { position: sticky; top: 100px; }
-.sidebar-box {
-  background: rgba(255,255,255,0.02); border: 1px solid rgba(200,169,110,0.09);
-  padding: 28px; margin-bottom: 20px;
-}
-.sb-title {
-  font-family: var(--font-display); font-size: 1.2rem; font-style: italic;
-  color: var(--parchment); margin-bottom: 16px;
-}
-.sb-body { font-size: 0.9rem; line-height: 1.75; color: var(--text-mid); margin-bottom: 20px; }
-.subscribe-input {
-  width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(200,169,110,0.12);
-  padding: 11px 14px; color: var(--parchment); font-family: var(--font-body);
-  font-size: 0.88rem; outline: none; margin-bottom: 10px; transition: border-color 0.3s;
-}
+.sidebar-box { background: rgba(255,255,255,0.02); border: 1px solid rgba(200,169,110,0.09); padding: 24px; margin-bottom: 16px; }
+.sb-title { font-family: var(--font-display); font-size: 1.2rem; font-style: italic; color: var(--parchment); margin-bottom: 14px; }
+.sb-body { font-size: var(--fs-body); line-height: 1.75; color: var(--text-mid); margin-bottom: 18px; }
+.subscribe-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(200,169,110,0.12); padding: 11px 14px; color: var(--parchment); font-family: var(--font-body); font-size: var(--fs-body); outline: none; margin-bottom: 10px; transition: border-color 0.3s; }
 .subscribe-input:focus { border-color: rgba(200,169,110,0.35); }
 .subscribe-input::placeholder { color: var(--text-dim); }
-.sb-topics { display: flex; flex-direction: column; gap: 8px; }
-.sb-topic {
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 0.82rem; color: var(--text-mid); padding: 8px 0;
-  border-bottom: 1px solid rgba(200,169,110,0.05); cursor: pointer;
-  transition: color 0.2s;
-}
+.sb-topics { display: flex; flex-direction: column; gap: 6px; }
+.sb-topic { display: flex; justify-content: space-between; align-items: center; font-size: var(--fs-body); color: var(--text-mid); padding: 8px 0; border-bottom: 1px solid rgba(200,169,110,0.05); cursor: pointer; transition: color 0.2s; }
 .sb-topic:last-child { border-bottom: none; }
-.sb-topic:hover { color: var(--gold); }
-.sb-topic-count { font-size: 0.65rem; color: var(--text-dim); }
+.sb-topic:hover { color: var(--accent); }
+.sb-topic-count { font-size: var(--fs-eyebrow); color: var(--text-dim); }
 
-/* Featured article (first/hero) */
-.article-featured {
-  padding: 40px; background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(200,169,110,0.12); margin-bottom: 44px;
-  position: relative; overflow: hidden;
-}
-.article-featured::before {
-  content: '✦'; position: absolute; right: 24px; top: 20px;
-  font-size: 5rem; color: rgba(200,169,110,0.05); font-family: var(--font-display);
-}
-.af-badge {
-  font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
-  background: var(--gold); color: var(--ink); padding: 4px 12px;
-  display: inline-block; margin-bottom: 16px;
-}
-.af-title {
-  font-family: var(--font-display); font-size: 1.8rem; font-style: italic;
-  color: var(--parchment); line-height: 1.25; margin-bottom: 14px;
-}
-.af-excerpt { font-size: 1rem; line-height: 1.8; color: var(--text-mid); margin-bottom: 24px; }
+/* Empty state */
+.articles-empty { padding: 60px; text-align: center; color: var(--text-dim); font-style: italic; font-family: var(--font-serif); font-size: var(--fs-body-lg); }
 
 @media (max-width: 900px) {
-  .articles-page { padding: 40px 24px 80px; }
+  .articles-page { padding: 40px 20px 80px; }
   .articles-layout { grid-template-columns: 1fr; }
   .articles-sidebar { position: static; }
-  .article-item { grid-template-columns: 50px 1fr; gap: 16px; }
+  .article-item { grid-template-columns: 44px 1fr; gap: 14px; }
 }
 </style>
 </head>
 <body>
-
 <nav id="mainNav">
   <a href="index.html" class="nav-logo"><span>B.</span>Shahbaz</a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
-    <li><a href="books.html">Books</a></li><li><a href="articles.html" class="active">Articles</a></li>
+    <li><a href="books.html">Books</a></li><li><a href="articles.html">Articles</a></li>
     <li><a href="shop.html">Shop & Links</a></li><li><a href="contact.html">Contact</a></li>
   </ul>
-  <button class="nav-menu-toggle" id="navToggle"><span></span><span></span><span></span></button>
+  <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
 </nav>
 <div class="nav-mobile" id="mobileNav">
-  <button class="nav-mobile-close" id="mobileClose">✕</button>
   <a href="index.html">Home</a><a href="about.html">About</a><a href="books.html">Books</a>
   <a href="articles.html">Articles</a><a href="shop.html">Shop & Links</a><a href="contact.html">Contact</a>
 </div>
@@ -119,69 +82,19 @@
     <div class="page-hero-bg"></div>
     <div class="page-hero-content">
       <div class="section-eyebrow">Substack & Essays</div>
-      <h1><em style="color:var(--gold)">Articles</em></h1>
-      <p>Essays on writing, literature, and the human condition. Thinking out loud since I realised silence wasn't working.</p>
+      <h1><em style="color:var(--accent)">Articles</em></h1>
+      <p>Essays on writing, literature, and the human condition. Thinking out loud since silence wasn't working.</p>
     </div>
   </div>
 
   <div class="articles-page">
     <div class="articles-layout">
       <div>
-        <!-- Featured -->
-        <div class="article-featured fade-up" id="articleFeatured">
-          <span class="af-badge">Latest Essay</span>
-          <div class="af-title">I Was the Strong One Before. I Was Ready.</div>
-          <p class="af-excerpt">On what it means to hold yourself together long enough that falling apart feels like a betrayal of the person you used to be. Published on Substack — my newest essay and perhaps the most personal thing I've written outside of fiction.</p>
-          <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="btn btn-outline">Read on Substack →</a>
-        </div>
-
-        <!-- Articles list -->
+        <!-- Featured — populated by cms-loader -->
+        <div class="article-featured fade-up" id="articleFeatured" style="display:none;"></div>
+        <!-- List — populated by cms-loader -->
         <div class="articles-list" id="articlesList">
-          <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="article-item fade-up">
-            <div class="ai-num">01</div>
-            <div class="ai-body">
-              <div class="ai-meta"><span class="ai-tag">Writing</span><span class="ai-date">Substack Essay</span></div>
-              <div class="ai-title">World Building the Way That Doesn't Make Me Want to Stop</div>
-              <p class="ai-excerpt">There's a version of world building that feels like homework. Then there's the version that feels like falling in love with a place that doesn't exist yet.</p>
-              <div class="ai-read">Read Essay →</div>
-            </div>
-          </a>
-          <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="article-item fade-up">
-            <div class="ai-num">02</div>
-            <div class="ai-body">
-              <div class="ai-meta"><span class="ai-tag">Reflection</span><span class="ai-date">Essay</span></div>
-              <div class="ai-title">Literature Gave Me Permission to Feel</div>
-              <p class="ai-excerpt">The books that cracked me open and why I'll never stop recommending them to everyone I meet, unsolicited, at slightly inappropriate moments.</p>
-              <div class="ai-read">Read Essay →</div>
-            </div>
-          </a>
-          <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="article-item fade-up">
-            <div class="ai-num">03</div>
-            <div class="ai-body">
-              <div class="ai-meta"><span class="ai-tag">Identity</span><span class="ai-date">Essay</span></div>
-              <div class="ai-title">On Writing in English as a Pakistani Author</div>
-              <p class="ai-excerpt">Can we normalise Pakistani writers writing in English without having to justify, explain, or defend their choice of language? The story is enough.</p>
-              <div class="ai-read">Read Essay →</div>
-            </div>
-          </a>
-          <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="article-item fade-up">
-            <div class="ai-num">04</div>
-            <div class="ai-body">
-              <div class="ai-meta"><span class="ai-tag">Craft</span><span class="ai-date">Essay</span></div>
-              <div class="ai-title">Dreams Were Enough, but Ahmad Insisted I Hope for More</div>
-              <p class="ai-excerpt">A meditation on ambition, hope, and what it means to want things loudly when the world keeps telling you to want them quietly.</p>
-              <div class="ai-read">Read Essay →</div>
-            </div>
-          </a>
-          <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="article-item fade-up">
-            <div class="ai-num">05</div>
-            <div class="ai-body">
-              <div class="ai-meta"><span class="ai-tag">Review</span><span class="ai-date">ARC Review</span></div>
-              <div class="ai-title">Bad Anatomy by Dani Davis — A Review</div>
-              <p class="ai-excerpt">Everything I felt reading this book and why I think more people need to be talking about it. Spoiler: I felt a lot of things.</p>
-              <div class="ai-read">Read Review →</div>
-            </div>
-          </a>
+          <div class="articles-empty">Loading articles...</div>
         </div>
       </div>
 
@@ -189,25 +102,25 @@
       <div class="articles-sidebar">
         <div class="sidebar-box fade-up">
           <div class="sb-title">Subscribe on Substack</div>
-          <p class="sb-body">New essays on writing, literature, and what it means to be a reader and a writer in the same body.</p>
+          <p class="sb-body">New essays on writing, literature, and what it means to be a reader and a writer at the same time.</p>
           <input class="subscribe-input" type="email" placeholder="your@email.com">
           <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="btn btn-gold" style="width:100%;text-align:center;display:block;">Subscribe →</a>
         </div>
         <div class="sidebar-box fade-up fade-up-delay-2">
           <div class="sb-title">Browse by Topic</div>
           <div class="sb-topics">
-            <div class="sb-topic">On Writing <span class="sb-topic-count">8 essays</span></div>
-            <div class="sb-topic">ARC Reviews <span class="sb-topic-count">12 reviews</span></div>
-            <div class="sb-topic">Reflections <span class="sb-topic-count">6 essays</span></div>
-            <div class="sb-topic">Identity & Voice <span class="sb-topic-count">4 essays</span></div>
-            <div class="sb-topic">Book Recs <span class="sb-topic-count">10 posts</span></div>
+            <div class="sb-topic">On Writing <span class="sb-topic-count">Essays</span></div>
+            <div class="sb-topic">ARC Reviews <span class="sb-topic-count">Reviews</span></div>
+            <div class="sb-topic">Reflections <span class="sb-topic-count">Essays</span></div>
+            <div class="sb-topic">Identity & Voice <span class="sb-topic-count">Essays</span></div>
+            <div class="sb-topic">Book Recs <span class="sb-topic-count">Posts</span></div>
           </div>
         </div>
         <div class="sidebar-box fade-up fade-up-delay-3">
           <div class="sb-title">Find me on</div>
           <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
-            <a href="https://instagram.com/b.shahbaz_writer" target="_blank" class="btn btn-outline" style="text-align:center">Instagram ↗</a>
-            <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="btn btn-outline" style="text-align:center">Linktree ↗</a>
+            <a href="https://instagram.com/b.shahbaz_writer" target="_blank" class="btn btn-outline" style="text-align:center;display:block" data-social="instagram">Instagram ↗</a>
+            <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" class="btn btn-outline" style="text-align:center;display:block" data-social="linktree">Linktree ↗</a>
           </div>
         </div>
       </div>
@@ -224,8 +137,9 @@
   <div>
     <div class="footer-copy">© 2024 Bisma Shahbaz. All rights reserved.</div>
     <div class="footer-socials">
-      <a href="https://instagram.com/b.shahbaz_writer" target="_blank">ig</a>
-      <a href="https://linktr.ee/BismaShahbazWriter" target="_blank">lt</a>
+      <a href="https://instagram.com/b.shahbaz_writer" target="_blank" data-social="instagram">ig</a>
+      <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" data-social="linktree">lt</a>
+      <a href="articles.html" data-social="substack">ss</a>
     </div>
   </div>
 </footer>
