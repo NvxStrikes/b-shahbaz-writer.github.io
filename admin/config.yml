@@ -8,6 +8,8 @@ backend:
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
+publish_mode: editorial_workflow
+
 collections:
 
   # ── BOOKS ──
@@ -38,6 +40,7 @@ collections:
       - { label: "Short Description", name: "description", widget: "text", hint: "1-2 sentences shown on the books page" }
       - { label: "Full Blurb", name: "body", widget: "markdown", required: false }
       - { label: "Tags", name: "tags", widget: "list", required: false, hint: "e.g. Dark, Slow Burn, Pakistani MC" }
+      - { label: "Featured on Homepage?", name: "featured", widget: "boolean", default: false, hint: "Turn ON to show this book on the homepage" }
       - { label: "Beta Reading Open?", name: "beta_open", widget: "boolean", default: false }
       - { label: "Order (lower = shown first)", name: "order", widget: "number", default: 1 }
 
