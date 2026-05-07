@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book — Bisma Shahbaz</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.book-detail { padding: 60px 56px 120px; max-width: 1100px; margin: 0 auto; }
+.book-detail-grid { display: grid; grid-template-columns: 320px 1fr; gap: 70px; align-items: start; }
+
+/* Cover */
+.bd-cover-wrap {
+  position: sticky; top: 100px;
+}
+.bd-cover {
+  width: 100%; aspect-ratio: 2/3;
+  overflow: hidden; border: 1px solid rgba(200,169,110,0.15);
+  position: relative; margin-bottom: 20px;
+}
+.bd-cover img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.bd-cover-art {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px; text-align: center;
+}
+.bd-cover-ornament { font-size: 4rem; margin-bottom: 20px; opacity: 0.7; }
+.bd-cover-title { font-family: var(--font-display); font-size: 1.5rem; font-style: italic; color: var(--parchment); line-height: 1.3; margin-bottom: 12px; }
+.bd-cover-author { font-size: var(--fs-eyebrow); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); }
+
+.bd-status { display: inline-block; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; padding: 6px 16px; margin-bottom: 16px; }
+.bd-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.bd-tag { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid rgba(200,169,110,0.15); color: var(--text-dim); padding: 4px 10px; }
+
+/* Content */
+.bd-content { }
+.bd-eyebrow { font-size: var(--fs-eyebrow); letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-dim); display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.bd-eyebrow::before { content: '✦'; color: var(--accent); font-size: 0.6em; }
+.bd-title { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 4rem); font-style: italic; color: var(--parchment); line-height: 1.1; margin-bottom: 8px; }
+.bd-genre { font-size: var(--fs-eyebrow); letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 32px; }
+.bd-divider { width: 60px; height: 1px; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 32px; }
+
+.bd-description { font-size: var(--fs-body-lg); line-height: 1.95; color: var(--text-mid); margin-bottom: 28px; font-weight: 300; }
+.bd-body { font-size: var(--fs-body-lg); line-height: 1.95; color: var(--text-mid); font-weight: 300; }
+.bd-body p { margin-bottom: 20px; }
+
+/* Beta box */
+.bd-beta-box {
+  margin-top: 48px; padding: 32px 36px;
+  background: rgba(200,169,110,0.06); border: 1px solid rgba(200,169,110,0.15);
+  border-left: 3px solid var(--accent);
+}
+.bd-beta-box h3 { font-family: var(--font-display); font-size: 1.5rem; font-style: italic; color: var(--parchment); margin-bottom: 10px; }
+.bd-beta-box p { font-size: var(--fs-body); line-height: 1.8; color: var(--text-mid); margin-bottom: 20px; }
+
+/* Back link */
+.bd-back { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-eyebrow); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); text-decoration: none; margin-bottom: 48px; transition: all 0.3s; }
+.bd-back:hover { color: var(--accent); gap: 14px; }
+
+/* Not found */
+.bd-not-found { text-align: center; padding: 100px 20px; color: var(--text-dim); font-style: italic; font-family: var(--font-serif); font-size: 1.2rem; }
+
+@media (max-width: 900px) {
+  .book-detail { padding: 40px 20px 80px; }
+  .book-detail-grid { grid-template-columns: 1fr; gap: 36px; }
+  .bd-cover-wrap { position: static; max-width: 260px; }
+}
+</style>
+</head>
+<body>
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo"><span>B.</span>Shahbaz</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+    <li><a href="books.html">Books</a></li><li><a href="articles.html">Articles</a></li>
+    <li><a href="shop.html">Shop & Links</a></li><li><a href="contact.html">Contact</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="mobileNav">
+  <a href="index.html">Home</a><a href="about.html">About</a><a href="books.html">Books</a>
+  <a href="articles.html">Articles</a><a href="shop.html">Shop & Links</a><a href="contact.html">Contact</a>
+</div>
+
+<div class="page-wrap">
+  <div class="book-detail" id="bookDetail">
+    <div style="text-align:center;padding:100px 20px;color:var(--text-dim);font-style:italic;font-family:var(--font-serif)">Loading book...</div>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo"><span>B.</span>Shahbaz</a>
+  <div class="footer-links">
+    <a href="about.html">About</a><a href="books.html">Books</a>
+    <a href="articles.html">Articles</a><a href="shop.html">Shop</a><a href="contact.html">Contact</a>
+  </div>
+  <div>
+    <div class="footer-copy">© 2024 Bisma Shahbaz. All rights reserved.</div>
+    <div class="footer-socials">
+      <a href="https://instagram.com/b.shahbaz_writer" target="_blank" data-social="instagram">ig</a>
+      <a href="https://linktr.ee/BismaShahbazWriter" target="_blank" data-social="linktree">lt</a>
+    </div>
+  </div>
+</footer>
+<script src="main.js"></script>
+<script src="cms-loader.js"></script>
+</body>
+</html>
