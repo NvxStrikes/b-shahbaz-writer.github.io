@@ -35,6 +35,7 @@ collections:
           - { label: "Gothic Romance", value: "gothic" }
           - { label: "Literary Fiction", value: "literary" }
           - { label: "Cozy Fantasy", value: "fantasy" }
+          - { label: "Other", value: "other" }
       - { label: "Cover Image", name: "cover", widget: "image", required: false, hint: "Upload your book cover here. Best size: 800x1200px (portrait 2:3 ratio). Use JPG or PNG under 2MB. Avoid square or landscape images — they will be cropped. Use Canva or Adobe Express to make a proper book cover." }
       - { label: "Cover Emoji (if no image)", name: "emoji", widget: "string", required: false, default: "📖" }
       - { label: "Short Description", name: "description", widget: "text", hint: "1-2 sentences shown on the books page" }
