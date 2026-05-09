@@ -41,7 +41,7 @@ async function getJSON(path) {
 async function listFiles(folder) {
   try {
     const r = await fetch(`${API}/content/${folder}?ref=${BRANCH}`, {
-      headers: { 'Accept': 'application/vnd.github.v3+json', 'Cache-Control': 'no-cache' }
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
     });
     if (!r.ok) return [];
     const data = await r.json();
@@ -53,7 +53,6 @@ async function listFiles(folder) {
 async function getRaw(folder, filename) {
   try {
     const r = await fetch(`${RAW}/content/${folder}/${filename}?v=${Date.now()}`, {
-      headers: { 'Cache-Control': 'no-cache' }
     });
     return r.ok ? r.text() : null;
   } catch { return null; }
