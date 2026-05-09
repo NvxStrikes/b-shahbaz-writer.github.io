@@ -63,20 +63,43 @@ async function getCollection(folder) {
   const files = await listFiles(folder);
   if (!files.length) return [];
   const items = await Promise.all(files.map(async f => {
-    const text = await getRaw(folder, f.name);
-    if (!text) return null;
-    const { meta, body } = parseFM(text);
-    return { ...meta, body, _file: f.name, _slug: f.name.replace('.md','') };
+    try {
+      // Use download_url directly from API response - most reliable
+      const url = f.download_url + '?v=' + Date.now();
+      const r = await fetch(url);
+      if (!r.ok) { console.error('Failed to fetch', f.name, r.status); return null; }
+      const text = await r.text();
+      const { meta, body } = parseFM(text);
+      return { ...meta, body, _file: f.name, _slug: f.name.replace('.md','') };
+    } catch(e) { console.error('Error fetching', f.name, e); return null; }
   }));
   return items.filter(Boolean).sort((a,b) => (a.order||99)-(b.order||99));
 }
 
 // Single book by slug
 async function getBook(slug) {
-  const text = await getRaw('books', `${slug}.md`);
-  if (!text) return null;
-  const { meta, body } = parseFM(text);
-  return { ...meta, body, _slug: slug };
+  try {
+    // First try via GitHub API to get download_url
+    const apiRes = await fetch(`${API}/content/books/${slug}.md?ref=${BRANCH}`, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (apiRes.ok) {
+      const fileInfo = await apiRes.json();
+      if (fileInfo.download_url) {
+        const r = await fetch(fileInfo.download_url + '?v=' + Date.now());
+        if (r.ok) {
+          const text = await r.text();
+          const { meta, body } = parseFM(text);
+          return { ...meta, body, _slug: slug };
+        }
+      }
+    }
+    // Fallback to raw URL
+    const text = await getRaw('books', `${slug}.md`);
+    if (!text) return null;
+    const { meta, body } = parseFM(text);
+    return { ...meta, body, _slug: slug };
+  } catch(e) { console.error('getBook error:', e); return null; }
 }
 
 // ── Helpers ──
