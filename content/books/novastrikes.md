@@ -7,7 +7,7 @@ emoji: 📖
 description: Test
 tags:
   - Pakistan
-featured: false
+featured: true
 beta_open: true
 order: 1
 ---
