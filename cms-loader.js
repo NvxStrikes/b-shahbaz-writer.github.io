@@ -12,20 +12,41 @@ function parseFM(text) {
   const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!m) return { meta: {}, body: text };
   const meta = {};
-  m[1].split('\n').forEach(line => {
-    const i = line.indexOf(':');
-    if (i < 0) return;
-    const k = line.slice(0, i).trim();
-    let v = line.slice(i + 1).trim().replace(/^["']|["']$/g, '');
+  const raw = m[1];
+  const lines = raw.split('\n');
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const colonIdx = line.indexOf(':');
+    if (colonIdx < 0) { i++; continue; }
+    const k = line.slice(0, colonIdx).trim();
+    const rest = line.slice(colonIdx + 1).trim();
+    if (!k) { i++; continue; }
+    // Inline array: tags: ["a","b"] or tags: [a, b]
+    if (rest.startsWith('[')) {
+      const inner = rest.slice(1, rest.lastIndexOf(']'));
+      meta[k] = inner.split(',').map(s => s.trim().replace(/^["']|["']$/g,'')).filter(Boolean);
+      i++; continue;
+    }
+    // Multi-line YAML list
+    if (rest === '' && i + 1 < lines.length && lines[i+1].trim().startsWith('- ')) {
+      const arr = [];
+      i++;
+      while (i < lines.length && lines[i].trim().startsWith('- ')) {
+        arr.push(lines[i].trim().slice(2).trim().replace(/^["']|["']$/g,''));
+        i++;
+      }
+      meta[k] = arr;
+      continue;
+    }
+    // Normal value
+    let v = rest.replace(/^["']|["']$/g, '');
     if (v === 'true') v = true;
     else if (v === 'false') v = false;
     else if (v !== '' && !isNaN(v)) v = Number(v);
-    if (k) meta[k] = v;
-  });
-  // inline arrays: tags: ["a","b"]
-  [...m[1].matchAll(/^(\w+):\s*\[(.*?)\]/gm)].forEach(([,k,v]) => {
-    meta[k] = v.split(',').map(s => s.trim().replace(/^["']|["']$/g,'')).filter(Boolean);
-  });
+    meta[k] = v;
+    i++;
+  }
   return { meta, body: text.replace(/^---[\s\S]*?---\r?\n?/, '').trim() };
 }
 
